@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <fstream>
 using namespace std;
 
 // macro to swap pair of elements
@@ -23,6 +24,12 @@ int cost; // track cost complexity
 // driver program
 main( int argc, char *argv[] )
 {
+	ofstream out_MINL, out_MAXL, out_MINR, out_MAXR;
+	out_MINL.open("min_search_loop_cost.txt", std::ios_base::app);
+	out_MAXL.open("max_search_loop_cost.txt", std::ios_base::app);
+	out_MINR.open("min_search_recurse_cost.txt", std::ios_base::app);
+	out_MAXR.open("max_search_recurse_cost.txt", std::ios_base::app);
+
 	int size;
 	size = atoi(argv[1]);
 	cout << "Size = " << size << endl;
@@ -33,50 +40,61 @@ main( int argc, char *argv[] )
 
 	init_array( buffer, size );
 	shuffle_array( buffer, size );
-	show_array( buffer, size );
+	//show_array( buffer, size );
 	int index = -1;
 
 	min_search( buffer, size, index );
-	cout << "Min = " << buffer[index] << endl;
-	cout << "cost: " << cost << endl;
+	//cout << "Min = " << buffer[index] << endl;
+	cout << "Min Loop cost: " << cost << endl;
+	out_MINL << cost << endl;
 	cost = 0;
 	
 	init_array( buffer, size );
 	shuffle_array( buffer, size );
-	show_array( buffer, size );
+	//show_array( buffer, size );
 	index = -1;
 
 	max_search( buffer, size, index );
-	cout << "Max = " << buffer[index] << endl;;
-	cout << "cost: " << cost << endl;
+	//cout << "Max = " << buffer[index] << endl;;
+	cout << "Max Loop cost: " << cost << endl;
+	out_MAXL << cost << endl;
 	cost = 0;
 
 	init_array( buffer, size );
 	shuffle_array( buffer, size );
 	index = -1;
-	show_array( buffer, size );
+	//show_array( buffer, size );
 
 	min_search_recursion( buffer, size, index );
-	cout << "Min = " << index << endl;
-	cout << "cost: " << cost << endl;
+	//cout << "Min = " << index << endl;
+	cout << "Min Recursion cost: " << cost << endl;
+	out_MINR << cost << endl;
 	cost = 0;
 	
 	init_array( buffer, size );
 	shuffle_array( buffer, size );
 	index = -1;
-	show_array( buffer, size );
+	//show_array( buffer, size );
 
 	max_search_recursion( buffer, size, index );
-	cout << "Max = " << index << endl;
-	cout << "cost: " << cost << endl;
+	//cout << "Max = " << index << endl;
+	cout << "Max Recursion cost: " << cost << endl;
+	out_MAXR << cost << endl;
 	cost = 0;
 	
+	/*
 	select_sort( buffer, size );
 	if ( is_sorted( buffer, size ) == 0 ) 
 		cout << "Sort did not work!" << endl;
 	else
 		cout << "Array is sorted" << endl;
 	show_array( buffer, size );
+	*/
+
+	out_MINL.close();
+	out_MAXL.close();
+	out_MINR.close();
+	out_MAXR.close();
 }
 
 void init_array( int buffer[], int size )
