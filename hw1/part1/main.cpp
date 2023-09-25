@@ -18,17 +18,19 @@ int is_sorted( int [], int );
 void max_search( int buffer[], int size, int &answer );
 void min_search_recursion( int buffer[], int size, int &answer);
 void max_search_recursion( int buffer[], int size, int &answer);
+void MINMAX_loop(int buffer[], int size, int &max, int &min);
+void MINMAX_recursion(int buffer[], int size, int &max, int &min);
 
 int cost; // track cost complexity
 
 // driver program
 main( int argc, char *argv[] )
 {
-	ofstream out_MINL, out_MAXL, out_MINR, out_MAXR;
-	out_MINL.open("min_search_loop_cost.txt", std::ios_base::app);
-	out_MAXL.open("max_search_loop_cost.txt", std::ios_base::app);
-	out_MINR.open("min_search_recurse_cost.txt", std::ios_base::app);
-	out_MAXR.open("max_search_recurse_cost.txt", std::ios_base::app);
+	ofstream out_MML, out_MMR;
+	out_MML.open("min_max_search_loop_cost.txt", std::ios_base::app);
+	//out_MAXL.open("max_search_loop_cost.txt", std::ios_base::app);
+	out_MMR.open("min_max_search_recurse_cost.txt", std::ios_base::app);
+	//out_MAXR.open("max_search_recurse_cost.txt", std::ios_base::app);
 
 	int size;
 	size = atoi(argv[1]);
@@ -38,6 +40,7 @@ main( int argc, char *argv[] )
 
 	cost = 0;
 
+	/*
 	init_array( buffer, size );
 	shuffle_array( buffer, size );
 	//show_array( buffer, size );
@@ -52,8 +55,9 @@ main( int argc, char *argv[] )
 	init_array( buffer, size );
 	shuffle_array( buffer, size );
 	//show_array( buffer, size );
-	index = -1;
+	index = -1;*/
 
+	/*
 	max_search( buffer, size, index );
 	//cout << "Max = " << buffer[index] << endl;;
 	cout << "Max Loop cost: " << cost << endl;
@@ -80,8 +84,30 @@ main( int argc, char *argv[] )
 	//cout << "Max = " << index << endl;
 	cout << "Max Recursion cost: " << cost << endl;
 	out_MAXR << cost << endl;
-	cost = 0;
+	cost = 0; */
 	
+	init_array( buffer, size );
+	shuffle_array( buffer, size );
+	int index_min = -1;
+	int index_max = -1; 
+
+	MINMAX_loop(buffer, size, index_max, index_min);
+	cout << "MINMAX loop cost: " << cost << endl;
+	out_MML << cost << endl;
+	cost = 0;
+
+	init_array( buffer, size );
+	shuffle_array( buffer, size );
+	index_min = -1;
+	index_max = -1; 
+
+	
+
+	MINMAX_recursion(buffer, size, index_max, index_min);
+	cout << "MINMAX recursion cost: " << cost << endl;
+	out_MMR << cost << endl;
+	cost = 0;
+
 	/*
 	select_sort( buffer, size );
 	if ( is_sorted( buffer, size ) == 0 ) 
@@ -91,10 +117,10 @@ main( int argc, char *argv[] )
 	show_array( buffer, size );
 	*/
 
-	out_MINL.close();
-	out_MAXL.close();
-	out_MINR.close();
-	out_MAXR.close();
+	out_MML.close();
+	out_MMR.close();
+	//out_MINR.close();
+	//out_MAXR.close();
 }
 
 void init_array( int buffer[], int size )
@@ -201,6 +227,84 @@ void max_search_recursion( int buffer[], int size, int &answer){
 		
 		if(left > right) answer = left;
 		else answer = right;
+		cost++;
+	}
+}
+
+void MINMAX_loop(int buffer[], int size, int &max, int &min){
+	int start_loop = 0;
+
+	if(size%2 == 0){
+		if(buffer[0] < buffer[1]){
+			min = buffer[0];
+			max = buffer[1];
+			cost++;
+		}
+		else{
+			min = buffer[1];
+			max = buffer[0];
+			cost++;
+		}
+		start_loop = 2;
+	}
+	else{
+		min = buffer[0];
+		max = buffer[1];
+		start_loop = 1;
+	}
+
+	for ( int i=start_loop; i<size; i+=2 ) {
+		cost+=3;
+		if(buffer[i] < buffer[i+1]){
+			if(buffer[i] < min) min = buffer[i];
+			else if(buffer[i] > max) max = buffer[i];	
+		}
+	}
+}
+
+void MINMAX_recursion(int buffer[], int size, int &max, int &min){
+	if(size == 1){
+		min = buffer[0];
+		max = buffer[0];
+	}
+	else if(size == 2){
+		if(buffer[0] < buffer[1]){
+			min = buffer[0]; 
+			max = buffer[1];
+		}
+		else{
+			min = buffer[1];
+			max = buffer[0];
+		}
+		cost++;
+	}
+	else{
+		int left_buffer_size = size/2;
+		int right_buffer_size;
+		if(size%2 == 1)
+			right_buffer_size = (size/2)+1;
+		else
+			right_buffer_size = size/2;
+		
+		int left_buffer[left_buffer_size];
+		int right_buffer[right_buffer_size];
+	
+		for(int i = 0; i < size/2; i++)
+			left_buffer[i] = buffer[i];
+		
+		for(int i = 0; i < size/2 + 1; i++)
+			right_buffer[i] = buffer[(size/2) + i];
+	
+		int left_min, left_max, right_min, right_max;
+		
+		MINMAX_recursion( left_buffer, left_buffer_size, left_max, left_min);
+		MINMAX_recursion( right_buffer, right_buffer_size, right_max, right_min);
+		
+		if(left_min < right_min) min = left_min;
+		else min = right_min;
+		cost++;
+		if(left_max > right_max) max = left_max;
+		else max = right_max;
 		cost++;
 	}
 }
