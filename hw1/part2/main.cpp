@@ -11,10 +11,16 @@ using namespace std;
 
 // prototypes of sorts
 void bsort(int array[], int size);
-//void qsort(int array[], int size, int (*choose_pivot)(int [], int));
+void msort(int array[], int size);
+void quicksort(int array[], int size);
+void msort(int array[], int low, int high);
+void my_qsort(int array[], int size, int (*choose_pivot)(int [], int));
+void ssort(int array[], int size);
+void merge(int array[], int low, int mid, int high);
+void isort(int array[], int size);
 
 // median finding (for quicksort)
-void select(int array[], int size, int K, int &answer);
+void select(int array[], int size, int K, int &answer); 
 
 // helpers
 void show(int array[], int size);
@@ -45,13 +51,44 @@ main(int argc, char* argv[]){
 
 		//testing bubble sort
 		cost = 0;
-		copy(test_array, array, size);
+		copy(test_array, array, size); //so that we can copy test_array again so it will always be the same  unsorted array
 		bsort(array, size);
 		is_sorted(array, size);
-		cout << cost << " ";
+		cout << "bubble sort cost: " << cost << " ";
 
 		//do something for the other sorts
+		cost = 0;
+		copy(test_array, array, size);
+		isort(array, size);
+		is_sorted(array, size);
+		cout << "insertion sort cost: " << cost << " ";
 		
+		cost = 0;
+		copy(test_array, array, size);
+		ssort(array, size);
+		is_sorted(array, size);
+		cout << "selection sort cost: " << cost << " ";
+
+		cost = 0;
+		copy(test_array, array, size);
+		msort(array, size);
+		is_sorted(array, size);
+		cout << "merge sort cost: " << cost << " ";
+
+		cost = 0;
+		copy(test_array, array, size);
+		quicksort(array, size);
+		is_sorted(array, size);
+		cout << "quicksort with fixed pivot cost: " << cost << " ";
+
+		cost = 0;
+		copy(test_array, array, size);
+		int pivot;
+		select(array, size, size/2, pivot);
+		my_qsort(array, size, pivot);
+		is_sorted(array, size);
+		cout << "quicksort with median pivot cost: " << cost << " ";
+
 
 		cout << endl;
 	}
@@ -103,6 +140,19 @@ void bsort(int array[], int size){
 			if(array[j] < array[j-1){
 				swap(array[j], array[j-1]);
 			}
+			else break;
+		}
+	}
+}
+
+
+//insertion sort
+void isort(int array[], int size){
+	if(size == 1) return;
+	for(int i = 1; i < size; i++){
+		for(int j = i; j > 0; j--){
+			cost++;
+			if(array[j] < array[j-1]) swap(array[j], array[j-1]);
 			else break;
 		}
 	}
@@ -185,7 +235,8 @@ void my_qsort(int array[], int size, int (*choose_pivot)(int [], int)){
 	}
 
 	//chose pivot
-	int pivot = choose_pivot(array, size);
+	int pivot; 
+	select(array, size, size/2, pivot)//change this to the select(k)
 	int index = 0; //for index of pivot
 	for(int i = 0; i < size; i++){
 		if(array[i] == pivot) {
@@ -223,15 +274,94 @@ void my_qsort(int array[], int size, int (*choose_pivot)(int [], int)){
 }
 
 
+//quicksort with fixed pivot (position 0)
+void quicksort(int array[], int size){
+	if(size <= 1) return;
+	if(size == 2){
+		cost++;
+		if(array[0] > array[1]){
+			swap(array[0], array[1]);
+		}
+		return;
+	}
+	else{	int pivot = array[0]
+		int pivot_index = 0;
+		swap(array[pivot_index], array[size-1]);
+		vector<int> left, right; //we are doing it anyways. Could make an array
+		for(int i = 0; i < size-1; i ++){
+			cost++;
+			if(array[i] < pivot)left.push_back(array[i]);
+			else right.push_back(array[i]);
+		}
+
+		//setting up array
+		int ptr = 0;
+		for(int i = 0; i < left.size(); i++) array[ptr++] = left[i];
+		array[ptr++] = pivot;
+		for(int i = 0; i < right.size(); i++) array[ptr++] = right[i];
+
+		quicksort(array, left.size());
+		quicksort(array, right.size());
+	}
+}
 
 
+//find kth smallest element in the array
+void select(int array[], int size, int K, int &answer){
+	if(size < 5){
+		assert(0 <= K && K < 5);
+		bsort(array, size);
+		answer = array[K];
+		return;
+	}
+	
+	//blocking 5
+	for(int i = 0; i + 5 <= size; i = i+5) bsort(array+i, 5);
 
+	//array of medians
+	int median_num = size/5;
+	int medians[median_num];
 
+	for(int i = 0; i < median_num; i++) medians[i] = array[i+2]; //hmmm? seems like its just filling it up
 
+	int pivot;
+	select(medians, median_num, median_num/2, pivot);
 
+	int index = 0;
+	for(int i = 0; i < size; i++){
+		if(array[i] == pivot){
+			index = i;
+			break;
+		}
+	}
 
+	swap(array[index], array[size-1]) //why put it at the end?
 
+	vector<int> left, right;
 
+	for(int i = 0; i < size - 1; i++){
+		cost++;
+		if(array[i] <= pivot) left.push_back(array[i]);
+		else right.push_back(array[i]);
+	}
+
+	int left_size = left.size();
+	int right_size = right.size();
+
+	if(K < left_size){
+		int left_array[left_size];
+		for(int i=0; i < left_size; i++) left_array[i] = left[i];
+		select(left_array, left_size, K, answer);
+	}
+	else if(k == left_size) answer = pivot;
+	else{
+		int right_array[right_size];
+		for(int i=0; i < right_size; i++) right_array[i] = right[i];
+		select(right_array, right_size, K-(left_size+1), answer);
+	}
+}
+
+	
 
 
 
