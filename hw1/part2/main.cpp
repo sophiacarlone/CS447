@@ -80,7 +80,7 @@ main(int argc, char* argv[]){
 
 		cost = 0;
 		copy(test_array, array, size);
-		quicksort(array, size, 0);
+		quicksort(array, size, size-1);
 		is_sorted(array, size);
 		cout << "quicksort with fixed pivot cost: " << cost << " " << endl;
 
@@ -285,7 +285,7 @@ void my_qsort(int array[], int size, int pivot){
 }
 
 
-//quicksort with fixed pivot (position 0)
+//quicksort with fixed pivot (last position)
 void quicksort(int array[], int size, int pivot_index){
 	if(size <= 1) return;
 	if(size == 2){
@@ -312,10 +312,8 @@ void quicksort(int array[], int size, int pivot_index){
 		array[ptr++] = pivot;
 		for(int i = 0; i < right.size(); i++) array[ptr++] = right[i];
 
-		cout << "Sizes - left: " << left.size() << " right: " << right.size() << endl;
-
-		quicksort(array, left.size(), 0);
-		quicksort(array, right.size(), left.size());
+		quicksort(array, left.size(), left.size()-1);
+		quicksort(array, right.size(), size-1);
 		show(array, size);
 	}
 }
