@@ -3,6 +3,7 @@
 #include <iostream>
 #include <assert.h>
 #include <time.h>
+#include <vector>
 
 using namespace std;
 
@@ -12,9 +13,9 @@ using namespace std;
 // prototypes of sorts
 void bsort(int array[], int size);
 void msort(int array[], int size);
-void quicksort(int array[], int size);
+void quicksort(int array[], int size, int pivot);
 void msort(int array[], int low, int high);
-void my_qsort(int array[], int size, int (*choose_pivot)(int [], int));
+void my_qsort(int array[], int size, int pivot);
 void ssort(int array[], int size);
 void merge(int array[], int low, int mid, int high);
 void isort(int array[], int size);
@@ -45,7 +46,9 @@ main(int argc, char* argv[]){
 		}
 		shuffle(test_array, size);
 
-		cout << size << " ";
+		cout << size << " " << endl;
+
+		show(test_array, size);
 
 		int array[size];
 
@@ -54,32 +57,32 @@ main(int argc, char* argv[]){
 		copy(test_array, array, size); //so that we can copy test_array again so it will always be the same  unsorted array
 		bsort(array, size);
 		is_sorted(array, size);
-		cout << "bubble sort cost: " << cost << " ";
+		cout << "bubble sort cost: " << cost << " " << endl;
 
 		//do something for the other sorts
 		cost = 0;
 		copy(test_array, array, size);
 		isort(array, size);
 		is_sorted(array, size);
-		cout << "insertion sort cost: " << cost << " ";
+		cout << "insertion sort cost: " << cost << " " << endl;
 		
 		cost = 0;
 		copy(test_array, array, size);
 		ssort(array, size);
 		is_sorted(array, size);
-		cout << "selection sort cost: " << cost << " ";
+		cout << "selection sort cost: " << cost << " " << endl;
 
 		cost = 0;
 		copy(test_array, array, size);
 		msort(array, size);
 		is_sorted(array, size);
-		cout << "merge sort cost: " << cost << " ";
+		cout << "merge sort cost: " << cost << " " << endl;
 
 		cost = 0;
 		copy(test_array, array, size);
-		quicksort(array, size);
+		quicksort(array, size, 0);
 		is_sorted(array, size);
-		cout << "quicksort with fixed pivot cost: " << cost << " ";
+		cout << "quicksort with fixed pivot cost: " << cost << " " << endl;
 
 		cost = 0;
 		copy(test_array, array, size);
@@ -87,10 +90,11 @@ main(int argc, char* argv[]){
 		select(array, size, size/2, pivot);
 		my_qsort(array, size, pivot);
 		is_sorted(array, size);
-		cout << "quicksort with median pivot cost: " << cost << " ";
+		cout << "quicksort with median pivot cost: " << cost << " " << endl;
 
 
 		cout << endl;
+		cost = 0;
 	}
 }
 
@@ -134,13 +138,22 @@ void copy(int src[], int dest[], int size)
 
 //bubble sort
 void bsort(int array[], int size){
+	/*
 	for(int i = size-1; i > 0; i--){
 		for(int j = 0; j < i; j++){
 			cost++; //TODO: make sure this is defined and used
-			if(array[j] < array[j-1){
+			if(array[j] < array[j-1]){
 				swap(array[j], array[j-1]);
 			}
 			else break;
+		}
+	}break*/    
+
+    	for (int i = 0; i < size - 1; i++){
+        	for (int j = 0; j < size - i - 1; j++){
+			cost++;
+                	if (array[j] > array[j + 1])
+                        	swap(array[j], array[j + 1]);
 		}
 	}
 }
@@ -164,11 +177,10 @@ void msort(int array[], int size){
 }
 
 //merge sort helper
-void msort(int array{}, int low, int high){
+void msort(int array[], int low, int high){
 	if (low >= high) return;
 
 	int mid = (low + high)/2;
-	
 	//left sort
 	msort(array, low, mid);
 	//right sort
@@ -182,23 +194,22 @@ void merge(int array[], int low, int mid, int high){
 	int size = high-low+1;
 	int temp[size];
 
-	int left = low;
+	int left = low; //start
 	int right = mid+1;
 
 	int index = 0;
 	while(left <= mid && right <= high){
 		cost++;
 		if(array[left] < array[right]){
-			temp[index++] = array[right++];
+			temp[index++] = array[left++];
 		}
-		else temp[index++] = array[left++];
+		else temp[index++] = array[right++];
 	}
-	
 	while(left <= mid){
 		temp[index++] = array[left++];
 	}
 	while(right <= high){
-		temp[index++] = array[left++];
+		temp[index++] = array[right++];
 	}
 	for(int i = 0; i < size; i ++){
 		array[low+i] = temp[i];
@@ -224,7 +235,7 @@ void ssort(int array[], int size){
 }
 
 //quicksort with median pivot
-void my_qsort(int array[], int size, int (*choose_pivot)(int [], int)){
+void my_qsort(int array[], int size, int pivot){
 	if(size <= 1) return;
 	if(size <= 2){
 		cost++;
@@ -235,8 +246,8 @@ void my_qsort(int array[], int size, int (*choose_pivot)(int [], int)){
 	}
 
 	//chose pivot
-	int pivot; 
-	select(array, size, size/2, pivot)//change this to the select(k)
+	//int pivot; 
+	select(array, size, size/2, pivot);//change this to the select(k)
 	int index = 0; //for index of pivot
 	for(int i = 0; i < size; i++){
 		if(array[i] == pivot) {
@@ -268,14 +279,14 @@ void my_qsort(int array[], int size, int (*choose_pivot)(int [], int)){
 	}
 	
 	//recurse!
-	my_qsort(array, left_v.size(), choose_pivot);
-	my_qsort(array+left_v.size()+1, right_v.size(), choose_pivot);
+	my_qsort(array, left_v.size(), pivot);
+	my_qsort(array+left_v.size()+1, right_v.size(), pivot);
 
 }
 
 
 //quicksort with fixed pivot (position 0)
-void quicksort(int array[], int size){
+void quicksort(int array[], int size, int pivot_index){
 	if(size <= 1) return;
 	if(size == 2){
 		cost++;
@@ -284,8 +295,9 @@ void quicksort(int array[], int size){
 		}
 		return;
 	}
-	else{	int pivot = array[0]
-		int pivot_index = 0;
+	else{	
+		cout << "pivot index: " << pivot_index << endl;
+		int pivot = array[pivot_index];
 		swap(array[pivot_index], array[size-1]);
 		vector<int> left, right; //we are doing it anyways. Could make an array
 		for(int i = 0; i < size-1; i ++){
@@ -300,8 +312,11 @@ void quicksort(int array[], int size){
 		array[ptr++] = pivot;
 		for(int i = 0; i < right.size(); i++) array[ptr++] = right[i];
 
-		quicksort(array, left.size());
-		quicksort(array, right.size());
+		cout << "Sizes - left: " << left.size() << " right: " << right.size() << endl;
+
+		quicksort(array, left.size(), 0);
+		quicksort(array, right.size(), left.size());
+		show(array, size);
 	}
 }
 
@@ -335,7 +350,7 @@ void select(int array[], int size, int K, int &answer){
 		}
 	}
 
-	swap(array[index], array[size-1]) //why put it at the end?
+	swap(array[index], array[size-1]); //why put it at the end?
 
 	vector<int> left, right;
 
@@ -353,7 +368,7 @@ void select(int array[], int size, int K, int &answer){
 		for(int i=0; i < left_size; i++) left_array[i] = left[i];
 		select(left_array, left_size, K, answer);
 	}
-	else if(k == left_size) answer = pivot;
+	else if(K == left_size) answer = pivot;
 	else{
 		int right_array[right_size];
 		for(int i=0; i < right_size; i++) right_array[i] = right[i];
