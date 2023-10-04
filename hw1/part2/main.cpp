@@ -4,6 +4,7 @@
 #include <assert.h>
 #include <time.h>
 #include <vector>
+#include <fstream>
 
 using namespace std;
 
@@ -34,6 +35,13 @@ int cost;
 
 main(int argc, char* argv[]){
 	assert(argc > 1);
+	
+	ofstream isort_out, ssort_out, msort_out, qsort_fixed_out, qsort_median_out;
+	isort_out.open("isort_costs.txt");
+	ssort_out.open("ssort_costs.txt");
+	msort_out.open("msort_costs.txt");
+	qsort_fixed_out.open("qsort_fixed_costs.txt");
+	qsort_median_out.open("qsort_median_costs.txt");
 
 	//get size
 	int total_size = atoi(argv[1]);
@@ -65,32 +73,37 @@ main(int argc, char* argv[]){
 		isort(array, size);
 		is_sorted(array, size);
 		cout << "insertion sort cost: " << cost << " " << endl;
+		isort_out << cost << endl;
 		
 		cost = 0;
 		copy(test_array, array, size);
 		ssort(array, size);
 		is_sorted(array, size);
 		cout << "selection sort cost: " << cost << " " << endl;
+		ssort_out << cost << endl;
 
 		cost = 0;
 		copy(test_array, array, size);
 		msort(array, size);
 		is_sorted(array, size);
 		cout << "merge sort cost: " << cost << " " << endl;
+		msort_out << cost << endl;
 
 		cost = 0;
 		copy(test_array, array, size);
-		quicksort(array, size, size-1);
+		quicksort(array, size, 0);
 		is_sorted(array, size);
 		cout << "quicksort with fixed pivot cost: " << cost << " " << endl;
+		qsort_fixed_out << cost << endl;
 
 		cost = 0;
 		copy(test_array, array, size);
 		int pivot;
-		select(array, size, size/2, pivot);
+		//select(array, size, size/2, pivot);
 		my_qsort(array, size, pivot);
 		is_sorted(array, size);
 		cout << "quicksort with median pivot cost: " << cost << " " << endl;
+		qsort_median_out << cost << endl;
 
 
 		cout << endl;
@@ -285,7 +298,7 @@ void my_qsort(int array[], int size, int pivot){
 }
 
 
-//quicksort with fixed pivot (last position)
+//quicksort with fixed pivot (first position)
 void quicksort(int array[], int size, int pivot_index){
 	if(size <= 1) return;
 	if(size == 2){
@@ -296,7 +309,6 @@ void quicksort(int array[], int size, int pivot_index){
 		return;
 	}
 	else{	
-		cout << "pivot index: " << pivot_index << endl;
 		int pivot = array[pivot_index];
 		swap(array[pivot_index], array[size-1]);
 		vector<int> left, right; //we are doing it anyways. Could make an array
@@ -312,9 +324,8 @@ void quicksort(int array[], int size, int pivot_index){
 		array[ptr++] = pivot;
 		for(int i = 0; i < right.size(); i++) array[ptr++] = right[i];
 
-		quicksort(array, left.size(), left.size()-1);
-		quicksort(array, right.size(), size-1);
-		show(array, size);
+		quicksort(array, left.size(), 0);
+		quicksort(array+left.size()+1, right.size(), 0);
 	}
 }
 
