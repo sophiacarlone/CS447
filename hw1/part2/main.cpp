@@ -36,12 +36,13 @@ int cost;
 main(int argc, char* argv[]){
 	assert(argc > 1);
 	
-	ofstream isort_out, ssort_out, msort_out, qsort_fixed_out, qsort_median_out;
+	ofstream isort_out, ssort_out, msort_out, qsort_fixed_out, qsort_median_out, select_out;
 	isort_out.open("isort_costs.txt");
 	ssort_out.open("ssort_costs.txt");
 	msort_out.open("msort_costs.txt");
 	qsort_fixed_out.open("qsort_fixed_costs.txt");
 	qsort_median_out.open("qsort_median_costs.txt");
+	select_out.open("select.txt");
 
 	//get size
 	int total_size = atoi(argv[1]);
@@ -104,7 +105,10 @@ main(int argc, char* argv[]){
 		is_sorted(array, size);
 		cout << "quicksort with median pivot cost: " << cost << " " << endl;
 		qsort_median_out << cost << endl;
-
+		
+		cost = 0;
+		select(array, size, size/2, pivot);
+		select_out << cost << endl;
 
 		cout << endl;
 		cost = 0;
@@ -364,7 +368,7 @@ void select(int array[], int size, int K, int &answer){
 	vector<int> left, right;
 
 	for(int i = 0; i < size - 1; i++){
-		cost++;
+		//cost++;
 		if(array[i] <= pivot) left.push_back(array[i]);
 		else right.push_back(array[i]);
 	}
