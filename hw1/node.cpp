@@ -8,43 +8,45 @@ class node{ //class specifically for tracking and representation of the lightbul
 		int switch_ID_; //id of the switch either in on (+) or off (-) form (cannot be 0)
 		bool seen_; //has it been accounted for in BFS QUESTION: will this be necessary?
 		int value_; //hold the ideal value based on tracking results (0/1)
-		vector<*node> edges_; //pointers to what this node should imply. This of this as edges
+		vector<node *> edges_; //pointers to what this node should imply. This of this as edges
 	public:
-		void node(int id);
-		void Add_edges(const vector<*node>& implies);
+		node(int id);
+		void Add_edges(const vector<node *>& implies);
 		void print_edges(); 
 };
 
-void node::node(int id){
+node::node(int id){
 	switch_ID_ = id;
 	seen_ = false;
-	value = -1;
-	edges_ = NULL;
+	value_ = -1;
+	edges_ = vector<node *>();
 }
 
-void node::Add_edges(const vector<*node>& implies){
+void node::Add_edges(const vector<node *>& implies){
 	edges_ = implies;
 }
 
-void print_edges(){
+void node::print_edges(){
 	for(int i = 0; i < edges_.size(); i++){
-		cout << edges[i].switch_ID_ << " ";
+		cout << edges_[i]->switch_ID_ << " ";
 	}
 	cout << endl;
 } 
 
 int main(){
-	node n1 = new node(1);
-	node n2 = new node(2);
-	node n3 = new node(3);
-	node n4 = new node(4);
+	node n1 (1);
+	node n2 (2);
+	node n3 (3);
+	node n4 (4);
 
-	vector<*nodes> fringe;
-	fringe.push_back(n2);	
-	fringe.push_back(n3);	
-	fringe.push_back(n4);	
+	vector<node *> fringe;
+	fringe.push_back(&n2);	
+	fringe.push_back(&n3);	
+	fringe.push_back(&n4);	
 		
 	n1.Add_edges(fringe);
+
+	n1.print_edges();
 
 	return 0;
 }
@@ -57,6 +59,7 @@ class graph_node{
 		bool seen_;
 	public:
 		void BFS(const graph_node* origin, int size);	
+
 };
 
 
