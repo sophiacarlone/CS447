@@ -74,15 +74,24 @@ int main(){
 	f3.push_back(&n7);
 	f3.push_back(&nneg1);
 	n4.Add_edges(f3);
+
+	//vector<node *>f4;
+	//f4.push_back(&n1);
+	//nneg1.Add_edges(f4);
 	
 	//n4.print_edges();
 
 	//BFS(&n1, 7);
 	//cout << "tracking now" << endl;
-	bool found = Track(&n1, 8);
+	bool found1 = Track(&n1, 8);
+	bool found2 = Track(&nneg1, 8);
 	//cout << "tracking done" << endl;
 
-	cout << "was it found? " << found << endl;	
+	if(found1 && found2) cout << "no solution"
+	
+
+	cout << "was it found? " << found1 << endl;	
+	cout << "was it found again? " << found2 << endl;	
 
 	return 0;
 }
@@ -122,6 +131,7 @@ void BFS(node * origin, int size){
 }*/
 
 bool Track(node * origin, int size){ //track and chase
+	if(origin->edges_.size() == 0) return false;
 	cout << "Tracking now" << endl;
 	//BFS
 	node * fringe[size];
@@ -158,6 +168,7 @@ bool Track(node * origin, int size){ //track and chase
 	//END OF BFS
 	
 	for(int i = 0; i < size; i++){
+		fringe[i]->setSeen(false);//reset
 		if(fringe[i]->getSwitchID() == (-1 * origin->getSwitchID())) return true;
 	}
 	return false;	
@@ -165,38 +176,3 @@ bool Track(node * origin, int size){ //track and chase
 
 
 
-
-
-/*************GARBAGE SHOOT*************/
-
-/*
-class graph_node{
-	private:
-		int switch_num_;
-		vector<graph_node*> implies_; //pointers to implicaitons
-		bool seen_;
-	public:
-		void BFS(const graph_node* origin, int size);	
-
-};
-
-
-void graph_node::BFS(const graph_node* origin, int size){
-	graph_node fringe[size];
-	int start = 0;
-	int next_space = 1;
-	fringe[start] = *origin;
-	do{
-		for(int i  = 0; i < implies_.size(); i++){
-			fringe[next_space] = implies_[i];
-			next_space++;
-		}
-		fringe[start].seen_ = true;
-		start++;
-	}while(fringe[start] == false);
-
-	for(int i = 0; i < size; i++){
-		cout << fringe[i] << " ";
-	}
-	cout << endl;
-} */
