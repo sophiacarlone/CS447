@@ -17,6 +17,8 @@ class node{ //class specifically for tracking and representation of the lightbul
 		void print_edges(); 
 		int getSwitchID(){return switch_ID_;};
 		int getNumEdges(){return edges_.size();}; //TOD0: get rid of this
+		void setSeen(bool x){ seen_ = x; };
+		bool getSeen(){ return seen_; };
 };
 
 node::node(int id){
@@ -47,6 +49,7 @@ int main(){
 	node n4 (4);
 	node n5 (5);
 	node n6 (6);
+	node n7 (7);
 
 	vector<node *> fringe;
 	fringe.push_back(&n2);	
@@ -64,7 +67,14 @@ int main(){
 	n1.print_edges();
 	n2.print_edges();
 
-	BFS(&n2, 3);
+	vector<node *>f3;
+	f3.push_back(&n1);
+	f3.push_back(&n7);
+	n4.Add_edges(f3);
+	
+	n4.print_edges();
+
+	BFS(&n1, 7);
 
 	return 0;
 }
@@ -74,12 +84,28 @@ void BFS(node * origin, int size){
 	int curr_head = 0;
 	int next_space = 1;
 	fringe[curr_head] = origin;
-	//cout << fringe[curr_head]->getSwitchID() << endl;
-	for(int i = 0; i < fringe[curr_head]->getNumEdges(); i++){
-		fringe[next_space] = fringe[curr_head]->edges_[i];
-		next_space++;
-	}
 	
+	do{
+		//if(fringe[curr_head]->getSeen()){
+		//	continue;
+		//} 
+		//cout << "hit B" << endl;
+		for(int i = 0; i < fringe[curr_head]->getNumEdges(); i++){
+			if(!(fringe[curr_head]->edges_[i]->getSeen())){
+			fringe[next_space] = fringe[curr_head]->edges_[i];
+			//cout << fringe[next_space]->getSwitchID() << " ";
+			next_space++;
+			}
+			//cout << endl << "next space # is " << next_space << endl;
+			for(int j = 0; j < size; j++){
+				cout << fringe[j]->getSwitchID() << " ";
+			}
+			cout << endl;	
+		}
+		fringe[curr_head]->setSeen(true);
+		curr_head++;
+	}while(curr_head < size);
+
 	for(int i = 0; i < size; i++){
 		cout << fringe[i]->getSwitchID() << " ";
 	}
