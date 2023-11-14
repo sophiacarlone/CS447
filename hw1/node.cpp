@@ -78,9 +78,9 @@ int main(){
 	//n4.print_edges();
 
 	//BFS(&n1, 7);
-	cout << "tracking now" << endl;
+	//cout << "tracking now" << endl;
 	bool found = Track(&n1, 8);
-	cout << "tracking done" << endl;
+	//cout << "tracking done" << endl;
 
 	cout << "was it found? " << found << endl;	
 
@@ -122,7 +122,7 @@ void BFS(node * origin, int size){
 }*/
 
 bool Track(node * origin, int size){ //track and chase
-	//cout << "hit a" << endl;
+	cout << "Tracking now" << endl;
 	//BFS
 	node * fringe[size];
 	int curr_head = 0;
@@ -141,10 +141,10 @@ bool Track(node * origin, int size){ //track and chase
 			next_space++;
 			}
 			//cout << endl << "next space # is " << next_space << endl;
-			for(int j = 0; j < size; j++){
-				cout << fringe[j]->getSwitchID() << " ";
-			}
-			cout << endl;	
+			//for(int j = 0; j < size; j++){
+			//	cout << fringe[j]->getSwitchID() << " ";
+			//}
+			//cout << endl;	
 		}
 		fringe[curr_head]->setSeen(true);
 		curr_head++;
