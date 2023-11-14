@@ -1,50 +1,62 @@
-//Sophia Carlone
-
-#include<iostream>
-//#include<vector>
-#include<cstdlib> //exit
-#include<cmath> //abs()
-//#include<type_traits> //is_integer
-
+#include <iostream>
+#include <fstream>
+#include <vector>
 using namespace std;
 
-void print(int array[], int size);
+vector<pair<int,int>> lightbulbs(string filename){
+    int bulbs;
+    int switches;
+    ifstream in;
+    in.open(filename);
+    in >> bulbs >> switches;
+    pair<int,int> switch_conf;
+    vector<pair<int,int>> bulb_confs;
+    pair<int,int> params;
+    params.first = bulbs;
+    params.second = switches;
+    bulb_confs.push_back(params);
+    for (int i = 0; i < bulbs - 1; i++){
+        in >> switch_conf.first;
+        in >> switch_conf.second;
+        bulb_confs.push_back(switch_conf);
+    }
+    for (pair<int,int> p : bulb_confs){
+        cout << p.first << p.second;
+    }
+    return bulb_confs;
+}
 
-#define S2B 2 //switches two each bulb config
+void contradiction(){
+}
+
 
 int main(){
-	int bulbs;
-	int switches;
+	vector<pair<int,int>> configuration = lightbulbs("3.txt");
+	int bulbs, switches;
+	bulbs = configuration.front().first;
+	switches = configuration.front().second;
 
-	cout << "how many switches" << endl;
-	cin >> switches;
-	cout << "how many bulbs" << endl;
-	cin >> bulbs;
-
-	//int switch_configs[2]; //switch configuration of the bulbs
-	//vector<switch_configs> bulb_configs; //the bulbs and their own configurations
-	
-	int bulb_configs[S2B*bulbs];
-
-	cout << "insert the configs" << endl;	
-
-	int temp = 0;
-	for(int i = 0; i < bulbs; i++){
-		cin >> temp;
-		if(abs(temp) > switches) exit(1); //TODO: add number checking (can use ascii)
-		bulb_configs[S2B*i] = temp;
-		cin >> temp;
-		if(abs(temp) > switches) exit(1);
-		bulb_configs[(S2B*i)+1] = temp;
+	pair <bool,bool> solution[switches];
+	for (int i = 0; i< switches; i++){
+  		solution[i].first = 0;
+  		solution[i].second = (rand()%2);
 	}
-	
-	print(bulb_configs, S2B*bulbs);		
 
-}
 
-void print(int array[], int size){
-	for(int i = 0; i < size; i++){
-		cout << array[i] << " ";
+	//input contradiction logic here and set first to 1 if we dont want to edit that switch anymore
+
+	int x = 0;
+	while (x == 0){
+ 		for (int i = 0; i< switches; i++){
+			if(solution[i].first = 0){
+            			for (int j = 1; j < bulbs + 1; j++){
+                    			if (solution[i].second == 1){
+                              			if (configuration[j].first == -(i+1))
+                                            		solution[i].second = 0;
+                    			}
+            			}
+      			}      
+  		}
 	}
-	cout << endl;
 }
+                                                                    
