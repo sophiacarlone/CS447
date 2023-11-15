@@ -1,6 +1,7 @@
 #include<iostream>
 #include<fstream>
 #include<vector>
+#include<map>
 #include<stdlib.h>
 
 using namespace std;
@@ -53,26 +54,37 @@ bool Track(node * origin, int size);
 void Result(node * origin, bool x2negx, bool negx2x);
 
 vector<pair<int,int>> lightbulbs(string filename){
-    int bulbs;
-    int switches;
+    int bulbs; //total bulbs
+    int switches; //total switches
+    int curr_switch1; //switch being looked at at one time
+    int curr_switch2; //switch being looked at at one time
+    map<int, node> graph; //graph that will hold all implications
+
     ifstream in;
     in.open(filename);
     in >> bulbs >> switches;
-    pair<int,int> switch_conf;
-    vector<pair<int,int>> bulb_confs;
-    pair<int,int> params;
-    params.first = bulbs;
-    params.second = switches;
-    bulb_confs.push_back(params);
+
     for (int i = 0; i < bulbs - 1; i++){
-        in >> switch_conf.first;
-        in >> switch_conf.second;
-        bulb_confs.push_back(switch_conf);
+        in >> curr_switch1; //get switch being looked at
+        in >> curr_switch2; //get switch being looked at
+
+	if(graph.find(curr_switch1) == graph.end()){ //see if its in
+		node nx = new node(curr_switch); 
+		graph.insert(pair<int, node>(curr_switch, nx));
+	}
+	if(graph.find(-1 * curr_switch1) == graph.end()){ //see if its in
+		node nx = new node(-1 * curr_switch1); 
+		graph.insert(pair<int, node>(-1 * curr_switch1, nx));
+	}
+	if(graph.find(curr_switch2) == graph.end()){ //see if its in
+		node nx = new node(curr_switch2); 
+		graph.insert(pair<int, node>(curr_switch2, nx));
+	}
+	if(graph.find(-1 * curr_switch2) == graph.end()){ //see if its in
+		node nx = new node(-1 * curr_switch2); 
+		graph.insert(pair<int, node>(-1 * curr_switch2, nx));
+	}
     }
-    for (pair<int,int> p : bulb_confs){
-        cout << p.first << p.second;
-    }
-    return bulb_confs;
 }
 
 //FUNCTIONS
