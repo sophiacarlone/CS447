@@ -1,5 +1,6 @@
 #include<iostream>
 #include<vector>
+#include<stdlib.h>
 
 using namespace std;
 
@@ -19,6 +20,8 @@ class node{ //class specifically for tracking and representation of the lightbul
 		int getNumEdges(){return edges_.size();}; //TOD0: get rid of this
 		void setSeen(bool x){ seen_ = x; };
 		bool getSeen(){ return seen_; };
+		void setValue(int x){ value_ = x; };
+		int getValue(){ return value_; };
 };
 
 node::node(int id){
@@ -42,6 +45,7 @@ void node::print_edges(){
 //prototypes
 //void BFS(node * origin, int size);
 bool Track(node * origin, int size);
+void Result(node * origin, bool x2negx, bool negx2x);
 
 int main(){
 	node n1 (1);
@@ -72,12 +76,12 @@ int main(){
 	vector<node *>f3;
 	f3.push_back(&n1);
 	f3.push_back(&n7);
-	f3.push_back(&nneg1);
+	//f3.push_back(&nneg1);
 	n4.Add_edges(f3);
 
-	//vector<node *>f4;
-	//f4.push_back(&n1);
-	//nneg1.Add_edges(f4);
+	vector<node *>f4;
+	f4.push_back(&n1);
+	nneg1.Add_edges(f4);
 	
 	//n4.print_edges();
 
@@ -87,7 +91,9 @@ int main(){
 	bool found2 = Track(&nneg1, 8);
 	//cout << "tracking done" << endl;
 
-	if(found1 && found2) cout << "no solution"
+	Result(&n1, found1, found2);	
+
+	if(found1 && found2) cout << "no solution";
 	
 
 	cout << "was it found? " << found1 << endl;	
@@ -132,7 +138,7 @@ void BFS(node * origin, int size){
 
 bool Track(node * origin, int size){ //track and chase
 	if(origin->edges_.size() == 0) return false;
-	cout << "Tracking now" << endl;
+	//cout << "Tracking now" << endl;
 	//BFS
 	node * fringe[size];
 	int curr_head = 0;
@@ -174,5 +180,20 @@ bool Track(node * origin, int size){ //track and chase
 	return false;	
 }
 
-
-
+void Result(node * origin, bool x2negx, bool negx2x){
+	if(x2negx && negx2x){
+		cout << "NO SOLUTION" << endl;
+		exit(0);
+	}
+	if(x2negx && !negx2x){
+		origin->setValue(0);
+		cout << "set origin value to " << origin->getValue() << endl;
+		//could possibly set up the start of the chase here
+	}
+	else if(!x2negx && negx2x){ //leaving this as else if because later there may be a chase
+		origin->setValue(1);
+		cout << "set origin value to " << origin->getValue() << endl;
+		//all lightbulbs where x1 being on implies the lightbulb is off, we got a problem
+	}
+	//possible else to start a chase
+}
