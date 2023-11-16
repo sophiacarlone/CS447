@@ -17,20 +17,23 @@ class node{ //class specifically for tracking and representation of the lightbul
 		//vector<node *> edges_; //pointers to what this node should imply. This of this as edges QUESTION: should this be in public?
 	public:
 		vector<node *> edges_; //pointers to what this node should imply. This of this as edges QUESTION: should this be in public?
-		node(int id); //constructor
+		node();
+		//node(int id); //constructor
 		void Add_edges(const vector<node *>& implies); //add edges of the vector
 		//TOD0: add edge one at a time
 		void print_edges(); 
 		int getSwitchID(){return switch_ID_;};
+		int setSwitchID(int x){switch_ID_ = x;};
 		int getNumEdges(){return edges_.size();}; //TOD0: get rid of this
 		void setSeen(bool x){ seen_ = x; };
 		bool getSeen(){ return seen_; };
 		void setValue(int x){ value_ = x; };
 		int getValue(){ return value_; };
+		//TOD0: Destructor
 };
 
-node::node(int id){
-	switch_ID_ = id;
+node::node(){ //TOD0: big clean
+	switch_ID_ = 0;
 	seen_ = false;
 	value_ = -1;
 	edges_ = vector<node *>();
@@ -53,7 +56,7 @@ void node::print_edges(){
 bool Track(node * origin, int size);
 void Result(node * origin, bool x2negx, bool negx2x);
 
-vector<pair<int,int>> lightbulbs(string filename){
+void lightbulbs(){
     int bulbs; //total bulbs
     int switches; //total switches
     int curr_switch1; //switch being looked at at one time
@@ -61,35 +64,57 @@ vector<pair<int,int>> lightbulbs(string filename){
     map<int, node> graph; //graph that will hold all implications
 
     ifstream in;
-    in.open(filename);
-    in >> bulbs >> switches;
+    in.open("instance.txt");
+    in >> switches >> bulbs;
 
+    node switchNum;
+
+    for(int i = 1; i <= switches; i++){ //QUESTION: why -1?
+	switchNum.setSwitchID(i);
+	graph[i] = switchNum;
+    }
+
+//for testing
+/*    for(int i = 1; i <= switches; i++){ //QUESTION: why -1?
+	//switchNum.setValue(i);
+	cout << graph[i].getSwitchID() << " ";
+    }
+	cout << endl;
+*/
     for (int i = 0; i < bulbs - 1; i++){
+
+	//a | b
         in >> curr_switch1; //get switch being looked at
         in >> curr_switch2; //get switch being looked at
-
+/*
 	if(graph.find(curr_switch1) == graph.end()){ //see if its in
-		node nx = new node(curr_switch); 
+		node nx = new node;
+		nx(curr_switch1); //TOD0: get rid of the set id since it will be the key of the map called graph
 		graph.insert(pair<int, node>(curr_switch, nx));
-	}
-	if(graph.find(-1 * curr_switch1) == graph.end()){ //see if its in
-		node nx = new node(-1 * curr_switch1); 
-		graph.insert(pair<int, node>(-1 * curr_switch1, nx));
 	}
 	if(graph.find(curr_switch2) == graph.end()){ //see if its in
 		node nx = new node(curr_switch2); 
 		graph.insert(pair<int, node>(curr_switch2, nx));
 	}
+	if(graph.find(-1 * curr_switch1) == graph.end()){ //see if its in
+		node nx = new node(-1 * curr_switch1); 
+		graph.insert(pair<int, node>(-1 * curr_switch1, nx));
+	}
 	if(graph.find(-1 * curr_switch2) == graph.end()){ //see if its in
 		node nx = new node(-1 * curr_switch2); 
 		graph.insert(pair<int, node>(-1 * curr_switch2, nx));
 	}
+*/
+	graph[-1*curr_switch1].edges_.push_back(graph[curr_switch2]); // ~a->b
+	graph[-1*curr_switch2].edges_.push_back(graph[curr_switch1]); // ~b->a
+
     }
 }
 
 //FUNCTIONS
 int main(){
-	node n1 (1);
+	lightbulbs();
+	/*node n1 (1);
 	node n2 (2);
 	node n3 (3);
 	node n4 (4);
@@ -130,7 +155,7 @@ int main(){
 
 	cout << "was it found? " << found1 << endl;	
 	cout << "was it found again? " << found2 << endl;	
-
+*/
 	return 0;
 }
 
