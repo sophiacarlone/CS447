@@ -69,7 +69,7 @@ void lightbulbs(){
 
     node switchNum;
 
-    for(int i = 1; i <= switches; i++){ //QUESTION: why -1?
+    for(int i = 1; i <= switches; i++){ 
 	switchNum.setSwitchID(i);
 	graph[i] = switchNum;
     }
@@ -105,10 +105,19 @@ void lightbulbs(){
 		graph.insert(pair<int, node>(-1 * curr_switch2, nx));
 	}
 */
-	graph[-1*curr_switch1].edges_.push_back(graph[curr_switch2]); // ~a->b
-	graph[-1*curr_switch2].edges_.push_back(graph[curr_switch1]); // ~b->a
+	cout << curr_switch1 <<endl; // ~a->b
+	cout << curr_switch2 << endl; // ~a->b
+	graph[-1*curr_switch1].edges_.push_back(&graph[curr_switch2]); // ~a->b
+	graph[-1*curr_switch2].edges_.push_back(&graph[curr_switch1]); // ~b->a
 
     }
+
+    for(int i = 1; i <= switches; i++){ //QUESTION: why -1?
+	//switchNum.setValue(i);
+	graph[i].print_edges();
+    }
+	cout << endl;
+
 }
 
 //FUNCTIONS
