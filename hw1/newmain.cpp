@@ -67,7 +67,7 @@ map<int, node> lightbulbs(){
     in.open("instance.txt");
     in >> switches >> bulbs;
 	//cout << switches << " " << bulbs << endl;
-    node switchNum;
+    node switchNum; //it goes back up here to call the implicit deallocator
 
     for(int i = 1; i <= switches; i++){ 
 	switchNum.setSwitchID(i);
@@ -114,14 +114,16 @@ map<int, node> lightbulbs(){
 	graph[-1*curr_switch2].edges_.push_back(&graph[curr_switch1]); // ~b->a
 
     }
-/*
+
     for(int i = 1; i <= switches; i++){ //QUESTION: why -1?
 	//switchNum.setValue(i);
+	cout << i << ": ";
 	graph[i].print_edges();
+	cout << -1*i << ": ";
 	graph[-1*i].print_edges();
     }
 	cout << endl;
-*/
+
     return graph;
 }
 
@@ -132,18 +134,18 @@ int main(){
 	int switches = graph.size()/2;
 	int tracked_posneg, tracked_negpos;
 
-/*    for(int i = 1; i <= switches; i++){ //QUESTION: why -1?
+    for(int i = 1; i <= switches; i++){ //QUESTION: why -1?
 	//switchNum.setValue(i);
 	graph[i].print_edges();
 	graph[-1*i].print_edges();
     }
 	cout << endl;
-*/
-    for(int i = 1; i <= switches; i++){ //QUESTION: why -1?
+
+    for(int i = 1; i <= switches; i++){ 
 	cout << endl;
-	tracked_posneg = Track(&(graph[i]), switches);
+	tracked_posneg = Track(&(graph[i]), graph.size());
 	cout << endl;
-	tracked_negpos = Track(&(graph[-1*i]), switches);
+	tracked_negpos = Track(&(graph[-1*i]), graph.size());
 	Result(&(graph[i]), tracked_posneg, tracked_negpos);
     }
 
@@ -189,7 +191,7 @@ bool Track(node * origin, int size){ //track and chase
 		cout << endl;
 		fringe[curr_head]->print_edges();
 
-	}while(curr_head < size);
+	}while(curr_head < size); //TOD0: fix
 /*
 	for(int i = 0; i < size; i++){
 		cout << fringe[i]->getSwitchID() << " ";
