@@ -128,36 +128,67 @@ map<int, node> lightbulbs(){
 //FUNCTIONS
 int main(){
 	map<int, node> graph;
-	graph = lightbulbs();
+	graph = lightbulbs(); //TOD0: argc for filename
 	int switches = graph.size()/2;
+	int tracked_posneg, tracked_negpos;
 
-    for(int i = 1; i <= switches; i++){ //QUESTION: why -1?
+/*    for(int i = 1; i <= switches; i++){ //QUESTION: why -1?
 	//switchNum.setValue(i);
 	graph[i].print_edges();
 	graph[-1*i].print_edges();
     }
 	cout << endl;
+*/
+    for(int i = 1; i <= switches; i++){ //QUESTION: why -1?
+	cout << endl;
+	tracked_posneg = Track(&(graph[i]), switches);
+	cout << endl;
+	tracked_negpos = Track(&(graph[-1*i]), switches);
+	Result(&(graph[i]), tracked_posneg, tracked_negpos);
+    }
 
 	return 0;
 }
 
 bool Track(node * origin, int size){ //track and chase
+	cout << "switch id " << origin->getSwitchID() << " " << endl;
+	cout << "edges: ";
+	origin->print_edges();
 	if(origin->edges_.size() == 0) return false;
 	//BFS
-	node * fringe[size];
+	vector<node *> fringe;
+	//node * fringe[size];
 	int curr_head = 0;
-	int next_space = 1;
-	fringe[curr_head] = origin;
+	//int next_space = 1;
+	fringe.push_back(origin);
+	//fringe[curr_head] = origin;
 	
 	do{
+		cout << "in do" << endl;
+		cout << "curr head: " << curr_head << " fringe size: " << fringe.size() << endl;
+		//if something has no edges, we should break
+		fringe[curr_head]->print_edges();
+		cout << "HIIIIIII" << endl;
+		if(fringe[curr_head]->getNumEdges() == 0){ 
+			if(curr_head == fringe.size()-1) break;
+			continue;
+		}
 		for(int i = 0; i < fringe[curr_head]->getNumEdges(); i++){
 			if(!(fringe[curr_head]->edges_[i]->getSeen())){
-			fringe[next_space] = fringe[curr_head]->edges_[i];
-			next_space++;
+				fringe.push_back(fringe[curr_head]->edges_[i]);
+				//fringe[next_space] = fringe[curr_head]->edges_[i];
+				//next_space++;
 			}
 		}
 		fringe[curr_head]->setSeen(true);
+		cout << "hit 1" << endl;
 		curr_head++;
+		for(int i = 0; i < fringe.size(); i++){
+			cout << fringe[i]->getSwitchID() << " ";
+		}
+		cout << endl;
+		fringe[curr_head]->print_edges();
+
 	}while(curr_head < size);
 /*
 	for(int i = 0; i < size; i++){
@@ -167,7 +198,7 @@ bool Track(node * origin, int size){ //track and chase
 */
 	//END OF BFS
 	
-	for(int i = 0; i < size; i++){
+	for(int i = 0; i < fringe.size(); i++){
 		fringe[i]->setSeen(false);//reset
 		if(fringe[i]->getSwitchID() == (-1 * origin->getSwitchID())) return true;
 	}
