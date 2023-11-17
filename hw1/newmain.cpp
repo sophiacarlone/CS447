@@ -56,7 +56,7 @@ void node::print_edges(){
 bool Track(node * origin, int size);
 void Result(node * origin, bool x2negx, bool negx2x);
 
-void lightbulbs(){
+map<int, node> lightbulbs(){
     int bulbs; //total bulbs
     int switches; //total switches
     int curr_switch1; //switch being looked at at one time
@@ -66,12 +66,15 @@ void lightbulbs(){
     ifstream in;
     in.open("instance.txt");
     in >> switches >> bulbs;
-
+	//cout << switches << " " << bulbs << endl;
     node switchNum;
 
     for(int i = 1; i <= switches; i++){ 
 	switchNum.setSwitchID(i);
 	graph[i] = switchNum;
+	switchNum.setSwitchID(-1*i);
+	graph[-1*i] = switchNum;
+
     }
 
 //for testing
@@ -81,7 +84,7 @@ void lightbulbs(){
     }
 	cout << endl;
 */
-    for (int i = 0; i < bulbs - 1; i++){
+    for (int i = 0; i < bulbs; i++){
 
 	//a | b
         in >> curr_switch1; //get switch being looked at
@@ -105,66 +108,36 @@ void lightbulbs(){
 		graph.insert(pair<int, node>(-1 * curr_switch2, nx));
 	}
 */
-	cout << curr_switch1 <<endl; // ~a->b
-	cout << curr_switch2 << endl; // ~a->b
+	//cout << curr_switch1 <<endl; // ~a->b
+	//cout << curr_switch2 << endl; // ~a->b
 	graph[-1*curr_switch1].edges_.push_back(&graph[curr_switch2]); // ~a->b
 	graph[-1*curr_switch2].edges_.push_back(&graph[curr_switch1]); // ~b->a
 
     }
-
+/*
     for(int i = 1; i <= switches; i++){ //QUESTION: why -1?
 	//switchNum.setValue(i);
 	graph[i].print_edges();
+	graph[-1*i].print_edges();
     }
 	cout << endl;
-
+*/
+    return graph;
 }
 
 //FUNCTIONS
 int main(){
-	lightbulbs();
-	/*node n1 (1);
-	node n2 (2);
-	node n3 (3);
-	node n4 (4);
-	node n5 (5);
-	node n6 (6);
-	node n7 (7);
-	node nneg1 (-1);
+	map<int, node> graph;
+	graph = lightbulbs();
+	int switches = graph.size()/2;
 
-	vector<node *> fringe;
-	fringe.push_back(&n2);	
-	fringe.push_back(&n3);	
-	fringe.push_back(&n4);	
-		
-	n1.Add_edges(fringe);
+    for(int i = 1; i <= switches; i++){ //QUESTION: why -1?
+	//switchNum.setValue(i);
+	graph[i].print_edges();
+	graph[-1*i].print_edges();
+    }
+	cout << endl;
 
-	vector<node *> f2;
-	f2.push_back(&n5);	
-	f2.push_back(&n6);	
-	
-	n2.Add_edges(f2);
-
-	vector<node *>f3;
-	f3.push_back(&n1);
-	f3.push_back(&n7);
-	n4.Add_edges(f3);
-
-	vector<node *>f4;
-	f4.push_back(&n1);
-	nneg1.Add_edges(f4);
-	
-	bool found1 = Track(&n1, 8);
-	bool found2 = Track(&nneg1, 8);
-
-	Result(&n1, found1, found2);	
-
-	if(found1 && found2) cout << "no solution";
-	
-
-	cout << "was it found? " << found1 << endl;	
-	cout << "was it found again? " << found2 << endl;	
-*/
 	return 0;
 }
 
