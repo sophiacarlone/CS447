@@ -23,7 +23,7 @@ class node{ //class specifically for tracking and representation of the lightbul
 		//TOD0: add edge one at a time
 		void print_edges(); 
 		int getSwitchID(){return switch_ID_;};
-		int setSwitchID(int x){switch_ID_ = x;};
+		void setSwitchID(int x){switch_ID_ = x;};
 		int getNumEdges(){return edges_.size();}; //TOD0: get rid of this
 		void setSeen(bool x){ seen_ = x; };
 		bool getSeen(){ return seen_; };
