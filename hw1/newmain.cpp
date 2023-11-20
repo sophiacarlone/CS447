@@ -28,6 +28,7 @@ class node{ //class specifically for tracking and representation of the lightbul
 		bool getSeen(){ return seen_; };
 		void setValue(int x){ value_ = x; };
 		int getValue(){ return value_; };
+		int setConfirmed(bool x){ confirmed_ = x; };
 		//TOD0: Destructor
 };
 
@@ -215,11 +216,13 @@ void Result(node * origin, bool x2negx, bool negx2x){
 	}
 	if(x2negx && !negx2x){
 		origin->setValue(0);
+		origin->setConfirmed(true);
 		cout << "set origin value to " << origin->getValue() << endl;
 		//could possibly set up the start of the chase here
 	}
 	else if(!x2negx && negx2x){ //leaving this as else if because later there may be a chase
 		origin->setValue(1);
+		origin->setConfirmed(true);
 		cout << "set origin value to " << origin->getValue() << endl;
 		//all lightbulbs where x1 being on implies the lightbulb is off, we got a problem
 	}
