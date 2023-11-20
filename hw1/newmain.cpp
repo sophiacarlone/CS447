@@ -135,17 +135,17 @@ int main(){
 	int switches = graph.size()/2;
 	int tracked_posneg, tracked_negpos;
 
-    for(int i = 1; i <= switches; i++){ //QUESTION: why -1?
+/*    for(int i = 1; i <= switches; i++){ //QUESTION: why -1?
 	//switchNum.setValue(i);
 	graph[i].print_edges();
 	graph[-1*i].print_edges();
     }
 	cout << endl;
-
+*/
     for(int i = 1; i <= switches; i++){ 
-	cout << endl;
+//	cout << endl;
 	tracked_posneg = Track(&(graph[i]), graph.size());
-	cout << endl;
+//	cout << endl;
 	tracked_negpos = Track(&(graph[-1*i]), graph.size());
 	Result(&(graph[i]), tracked_posneg, tracked_negpos);
     }
@@ -154,9 +154,9 @@ int main(){
 }
 
 bool Track(node * origin, int size){ //track and chase
-	cout << "switch id " << origin->getSwitchID() << " " << endl;
-	cout << "edges: ";
-	origin->print_edges();
+//	cout << "switch id " << origin->getSwitchID() << " " << endl;
+//	cout << "edges: ";
+//	origin->print_edges();
 	if(origin->edges_.size() == 0) return false;
 	//BFS
 	vector<node *> fringe;
@@ -167,11 +167,11 @@ bool Track(node * origin, int size){ //track and chase
 	//fringe[curr_head] = origin;
 	
 	do{
-		cout << "in do" << endl;
-		cout << "curr head: " << curr_head << " fringe size: " << fringe.size() << endl;
+//		cout << "in do" << endl;
+//		cout << "curr head: " << curr_head << " fringe size: " << fringe.size() << endl;
 		//if something has no edges, we should break
-		fringe[curr_head]->print_edges();
-		cout << "HIIIIIII" << endl;
+//		fringe[curr_head]->print_edges();
+//		cout << "HIIIIIII" << endl;
 		if(fringe[curr_head]->getNumEdges() == 0){ 
 			if(curr_head == fringe.size()-1) break;
 			continue;
@@ -184,13 +184,13 @@ bool Track(node * origin, int size){ //track and chase
 			}
 		}
 		fringe[curr_head]->setSeen(true);
-		cout << "hit 1" << endl;
+//		cout << "hit 1" << endl;
 		curr_head++;
-		for(int i = 0; i < fringe.size(); i++){
-			cout << fringe[i]->getSwitchID() << " ";
-		}
-		cout << endl;
-		fringe[curr_head]->print_edges();
+//		for(int i = 0; i < fringe.size(); i++){
+//			cout << fringe[i]->getSwitchID() << " ";
+//		}
+//		cout << endl;
+//		fringe[curr_head]->print_edges();
 
 	}while(curr_head < size); //TOD0: fix
 /*
