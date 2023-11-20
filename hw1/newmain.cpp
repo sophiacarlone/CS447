@@ -6,8 +6,6 @@
 
 using namespace std;
 
-//last commit
-
 //DATA STRUCTURES
 class node{ //class specifically for tracking and representation of the lightbulb graph
 	private:
@@ -51,18 +49,20 @@ void node::print_edges(){
 	cout << endl;
 } 
 
+//Globals
+map<int, node> graph; //graph that will hold all implications
 
 //PROTOTYPES
 //void BFS(node * origin, int size);
 bool Track(node * origin, int size);
 void Result(node * origin, bool x2negx, bool negx2x);
 
-map<int, node> lightbulbs(){
+void lightbulbs(){
     int bulbs; //total bulbs
     int switches; //total switches
     int curr_switch1; //switch being looked at at one time
     int curr_switch2; //switch being looked at at one time
-    map<int, node> graph; //graph that will hold all implications
+    //map<int, node> graph; //graph that will hold all implications
 
     ifstream in;
     in.open("instance.txt");
@@ -125,13 +125,13 @@ map<int, node> lightbulbs(){
     }
 	cout << endl;
 
-    return graph;
+    //return graph;
 }
 
 //FUNCTIONS
 int main(){
-	map<int, node> graph;
-	graph = lightbulbs(); //TOD0: argc for filename
+	//map<int, node> graph;
+	lightbulbs(); //TOD0: argc for filename
 	int switches = graph.size()/2;
 	int tracked_posneg, tracked_negpos;
 
