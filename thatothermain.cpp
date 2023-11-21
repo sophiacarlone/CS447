@@ -158,9 +158,9 @@ int main(){
 	tracked_negpos = Track(&(graph[-1*i]), graph.size());
 	Result(&(graph[i]), tracked_posneg, tracked_negpos);
     }
-    bool x = false;
-    while (!x){
-        x = true;
+    bool cheese = false;
+    while (!cheese){
+        cheese = true;
         for (int i = 1; i<= switches; i++){
             if(!graph[i].getConfirmed){ // if editable
                 for (int j = 1; j < bulbs + 1; j++){  //check all bulbs
@@ -171,13 +171,13 @@ int main(){
                     if ((b1 == ((-1*(graph[i].getValue()))*i)) && (b2 == ((-1*(graph[b2].getValue()))*i))){ 
                 // if the first switch is the oppoiste of i, and the second switch is also wrong, swap first
                         graph[i].setValue(-1*graph[i].getValue());
-                        x = false;
+                        cheese = false;
                         
                     }
                     else if ((b2 == ((-1*(graph[i].getValue()))*i)) && (b1 == ((-1*(graph[b1].getValue()))*i))){ 
                 // if the first switch is wrong, and the second switch the opposite of i, swap second
                         graph[i].setValue(-1*graph[i].getValue());
-                        x = false;
+                        cheese = false;
                     }
                     
                 }
