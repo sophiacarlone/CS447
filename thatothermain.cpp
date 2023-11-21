@@ -18,6 +18,7 @@ class node{ //class specifically for tracking and representation of the lightbul
 		vector<node *> edges_; //pointers to what this node should imply. This of this as edges QUESTION: should this be in public?
 		node();
 		//node(int id); //constructor
+		bool getConfirmed(){return confirmed_;};
 		void Add_edges(const vector<node *>& implies); //add edges of the vector
 		//TOD0: add edge one at a time
 		void print_edges(); 
@@ -161,21 +162,21 @@ int main(){
     while (!x){
         x = true;
         for (int i = 1; i<= switches; i++){
-            if(graph[i].getValue() == 0){ // if editable
+            if(!graph[i].getConfirmed){ // if editable
                 for (int j = 1; j < bulbs + 1; j++){  //check all bulbs
 
                     int b1 = configuration[j].first;
                     int b2 = configuration[j].second;
 
-                    if ((b1 == ((-1*(graph[i].getSwitchID()))*i)) && (b2 == ((-1*(graph[b2].getSwitchID()))*i))){ 
+                    if ((b1 == ((-1*(graph[i].getValue()))*i)) && (b2 == ((-1*(graph[b2].getValue()))*i))){ 
                 // if the first switch is the oppoiste of i, and the second switch is also wrong, swap first
-                        graph[i].setSwitchID(-1*graph[i].getSwitchID());
+                        graph[i].setValue(-1*graph[i].getValue());
                         x = false;
                         
                     }
-                    else if ((b2 == ((-1*(graph[i].getSwitchID()))*i)) && (b1 == ((-1*(graph[b1].getSwitchID()))*i))){ 
+                    else if ((b2 == ((-1*(graph[i].getValue()))*i)) && (b1 == ((-1*(graph[b1].getValue()))*i))){ 
                 // if the first switch is wrong, and the second switch the opposite of i, swap second
-                        graph[i].setSwitchID(-1*graph[i].getSwitchID());
+                        graph[i].setValue(-1*graph[i].getValue());
                         x = false;
                     }
                     
