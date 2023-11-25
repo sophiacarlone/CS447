@@ -156,9 +156,14 @@ int main(){
 	tracked_negpos = Track(&(graph[-1*i]), graph.size());
 	Result(&(graph[i]), tracked_posneg, tracked_negpos);
     }
-    bool cheese = false;
-    while (!cheese){
-        cheese = true;
+	for (int i = 1; i<= switches; i++){
+		if (graph[i].getValue() == -1){
+			graph[i].setValue(rand()%2);
+		}
+	}
+    bool cheesy = false;
+    while (!cheesy){
+        cheesy = true;
         for (int i = 1; i<= switches; i++){
             if(!graph[i].getConfirmed()){ // if editable
 		cout << i << " is editable" << endl;
@@ -171,14 +176,14 @@ int main(){
                 // if the first switch is the oppoiste of i, and the second switch is also wrong, swap first
                 	cout << "setting value to at " << i << " to " << (-1*graph[i].getValue()*graph[i].getSwitchID()) << endl;
                         graph[i].setValue(-1*graph[i].getValue()*graph[i].getSwitchID());
-                        cheese = false;
+                        cheesy = false;
                         
                     }
                     else if ((b2 == ((-1*(graph[i].getValue()))*i)) && (b1 == ((-1*(graph[b1].getValue()))*i))){ 
                 // if the first switch is wrong, and the second switch the opposite of i, swap second
                 	cout << "setting value to at " << i << " to " << (-1*graph[i].getValue()*graph[i].getSwitchID()) << endl;
                         graph[i].setValue(-1*graph[i].getValue()*graph[i].getSwitchID());
-                        cheese = false;
+                        cheesy = false;
                     }
                     
                 }
