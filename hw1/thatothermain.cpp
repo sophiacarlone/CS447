@@ -54,24 +54,21 @@ void node::print_edges(){
 map<int, node> graph; //graph that will hold all implications
 
 //PROTOTYPES
-//void BFS(node * origin, int size);
 bool Track(node * origin, int size);
 void Result(node * origin, bool x2negx, bool negx2x);
 
-vector <pair <int,int>> lightbulbs(){
+vector <pair <int,int> > lightbulbs(){
     int bulbs; //total bulbs
     int switches; //total switches
     int curr_switch1; //switch being looked at at one time
     int curr_switch2; //switch being looked at at one time
-    vector<pair<int,int>> bulb_confs; // bulb configuration for checking later
-    //map<int, node> graph; //graph that will hold all implications
+    vector<pair <int,int> > bulb_confs; // bulb configuration for checking later
 
     ifstream in;
     in.open("instance.txt");
     in >> switches >> bulbs;
     pair <int,int> cheese (switches,bulbs);
     bulb_confs.push_back(cheese);
-	//cout << switches << " " << bulbs << endl;
     node switchNum; //it goes back up here to call the implicit deallocator
 
     for(int i = 1; i <= switches; i++){ 
@@ -122,7 +119,7 @@ vector <pair <int,int>> lightbulbs(){
 	graph[-1*curr_switch2].edges_.push_back(&graph[curr_switch1]); // ~b->a
 
     }
-
+/*
     for(int i = 1; i <= switches; i++){ //QUESTION: why -1?
 	//switchNum.setValue(i);
 	cout << i << ": ";
@@ -131,17 +128,18 @@ vector <pair <int,int>> lightbulbs(){
 	graph[-1*i].print_edges();
     }
 	cout << endl;
-   
-return bulb_confs;
+  */ 
+    return bulb_confs;
     //return graph;
 }
 
 //FUNCTIONS
 int main(){
 	//map<int, node> graph;
-	vector<pair<int,int>> configuration = lightbulbs(); //TOD0: argc for filename
-	int bulbs = configuration.front().first;
-	int switches = configuration.front().second;
+	vector<pair <int,int> > configuration = lightbulbs(); //TOD0: argc for filename
+	int bulbs = configuration.front().second;
+	int switches = configuration.front().first;
+	cout << "switches " << switches << endl;
 	int tracked_posneg, tracked_negpos;
 
 /*    for(int i = 1; i <= switches; i++){ //QUESTION: why -1?
@@ -162,7 +160,8 @@ int main(){
     while (!cheese){
         cheese = true;
         for (int i = 1; i<= switches; i++){
-            if(!graph[i].getConfirmed){ // if editable
+            if(!graph[i].getConfirmed()){ // if editable
+		cout << i << " is editable" << endl;
                 for (int j = 1; j < bulbs + 1; j++){  //check all bulbs
 
                     int b1 = configuration[j].first;
@@ -170,13 +169,15 @@ int main(){
 
                     if ((b1 == ((-1*(graph[i].getValue()))*i)) && (b2 == ((-1*(graph[b2].getValue()))*i))){ 
                 // if the first switch is the oppoiste of i, and the second switch is also wrong, swap first
-                        graph[i].setValue(-1*graph[i].getValue());
+                	cout << "setting value to at " << i << " to " << (-1*graph[i].getValue()*graph[i].getSwitchID()) << endl;
+                        graph[i].setValue(-1*graph[i].getValue()*graph[i].getSwitchID());
                         cheese = false;
                         
                     }
                     else if ((b2 == ((-1*(graph[i].getValue()))*i)) && (b1 == ((-1*(graph[b1].getValue()))*i))){ 
                 // if the first switch is wrong, and the second switch the opposite of i, swap second
-                        graph[i].setValue(-1*graph[i].getValue());
+                	cout << "setting value to at " << i << " to " << (-1*graph[i].getValue()*graph[i].getSwitchID()) << endl;
+                        graph[i].setValue(-1*graph[i].getValue()*graph[i].getSwitchID());
                         cheese = false;
                     }
                     
@@ -186,6 +187,11 @@ int main(){
         }
         
     }
+	//print out solution
+	for(int i = 1; i <= switches; i++){
+		cout << i << " " << graph[i].getValue() << " ";
+	}
+	cout << endl;
 	return 0;
 }
 
