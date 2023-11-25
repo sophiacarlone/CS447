@@ -139,7 +139,6 @@ int main(){
 	vector<pair <int,int> > configuration = lightbulbs(); //TOD0: argc for filename
 	int bulbs = configuration.front().second;
 	int switches = configuration.front().first;
-	cout << "switches " << switches << endl;
 	int tracked_posneg, tracked_negpos;
 
 /*    for(int i = 1; i <= switches; i++){ //QUESTION: why -1?
@@ -193,8 +192,10 @@ int main(){
         
     }
 	//print out solution
+	cout << "Proof: " << endl;
 	for(int i = 1; i <= switches; i++){
-		cout << i << " " << graph[i].getValue() << " ";
+		if(graph[i].getValue()) cout << graph[i].getSwitchID() << " ";
+		else cout << graph[i].getSwitchID() * -1 << " ";
 	}
 	cout << endl;
 	return 0;
