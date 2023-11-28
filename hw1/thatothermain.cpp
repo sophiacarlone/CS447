@@ -186,13 +186,15 @@ bool Track(node * origin, int size){ //track and chase
 	fringe.push_back(origin);
 	do{
 		//if something has no edges, we should break
+	cout << "hit A" << endl;
+		cout << "curr_head " << curr_head << endl;
 		if(fringe[curr_head]->getNumEdges() == 0){ 
 			if(curr_head == fringe.size()-1) break;
 			continue;
 		//if a node has edges that have all been seen, we should break
 		ability_to_continue = false;
 		}
-		cout << fringe[curr_head]->getSwitchID() << "is said to have this amount of edges " << fringe[curr_head]->getNumEdges() << endl;
+		cout << fringe[curr_head]->getSwitchID() << " is said to have this amount of edges " << fringe[curr_head]->getNumEdges() << endl;
 		for(int i = 0; i < fringe[curr_head]->getNumEdges(); i++){
 			if(!(fringe[curr_head]->edges_[i]->getSeen())){
 				fringe.push_back(fringe[curr_head]->edges_[i]);
@@ -202,8 +204,14 @@ bool Track(node * origin, int size){ //track and chase
 			}
 		}
 		//cout << fringe.size() << endl;
+		cout << ability_to_continue << " status" << endl;
 		if(!ability_to_continue) break;
 		fringe[curr_head]->setSeen(true);
+
+		//getting edge case
+		//ability_to_continue = false;
+		//for(int i = 0; i < fringe[curr_head]->getNumEdges(); i++) if(!(fringe[curr_head]->edges_[i]->getSeen())) ability_to_continue = true;
+		//if(!ability_to_continue) break;
 		curr_head++;
 /*		for(int i = 0; i < fringe.size(); i++){
 			cout << fringe[i]->getSwitchID() << " ";
