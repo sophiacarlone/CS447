@@ -198,7 +198,7 @@ bool Track(node * origin, int size){ //track and chase
 		for(int i = 0; i < fringe[curr_head]->getNumEdges(); i++){
 			if(!(fringe[curr_head]->edges_[i]->getSeen())){
 				fringe.push_back(fringe[curr_head]->edges_[i]);
-				//cout << "what is being inserted: " << fringe[curr_head]->edges_[i]->getSwitchID() << endl;
+				cout << "what is being inserted: " << fringe[curr_head]->edges_[i]->getSwitchID() << endl;
 				fringe[curr_head]->edges_[i]->setSeen(true);
 				ability_to_continue = true;
 			}
@@ -208,9 +208,12 @@ bool Track(node * origin, int size){ //track and chase
 		if(!ability_to_continue) break;
 		fringe[curr_head]->setSeen(true);
 
+		//curr_head++;
 		//getting edge case
 		//ability_to_continue = false;
-		//for(int i = 0; i < fringe[curr_head]->getNumEdges(); i++) if(!(fringe[curr_head]->edges_[i]->getSeen())) ability_to_continue = true;
+		//if(curr_head == fringe.size()-1){
+		//	for(int i = 0; i < fringe[curr_head]->getNumEdges(); i++) if(!(fringe[curr_head]->edges_[i]->getSeen())) ability_to_continue = true;
+		//}
 		//if(!ability_to_continue) break;
 		curr_head++;
 /*		for(int i = 0; i < fringe.size(); i++){
