@@ -21,10 +21,17 @@ struct node{
     int value;
 };
 
+struct tree_node{
+	string symbols;
+    int value;
+	struct tree_node * left_child;
+	struct tree_node * right_child;
+};
+
 //functions
-void msort(node array[], int size);
-void msort(node array[], int low, int high);
-void merge(node array[], int low, int mid, int high);
+void msort(tree_node array[], int size);
+void msort(tree_node array[], int low, int high);
+void merge(tree_node array[], int low, int mid, int high);
 
 
 int main(int argc, char *argv[]){
@@ -38,22 +45,20 @@ int main(int argc, char *argv[]){
 	struct symbol curr_symbol;
 	char curr_char;
 	in.open(filename.c_str()); //TODO: assert
-	while(in >> curr_char){
+	while(in >> noskipws >> curr_char){
 		//in >> curr_char;
 		total_symbols++;
 		auto it = symbol_map.find(curr_char);
 		if(it == symbol_map.end()){
-			//cout << "hit A on " << curr_char << endl;
 			curr_symbol = {1, "", curr_char};
 			symbol_map[curr_char] = curr_symbol;
-			//cout << symbol_map[curr_char].frequency <<endl;
 		}
 		else{
-			//cout << "hit B on " << curr_char << endl;
 			symbol_map[curr_char].frequency++;
-			//cout << symbol_map[curr_char].frequency <<endl;
 		}
 	}
+
+	int num_characters = symbol_map.size();
 
 	// for(auto it = symbol_map.begin(); it != symbol_map.end(); it++){
 	// 		//it->second.frequency /= total_symbols;
@@ -61,40 +66,46 @@ int main(int argc, char *argv[]){
 	// }
 
 	//sorting of frequencies
-	struct node sorted_symbols[symbol_map.size()];
-	struct node insertnode;
+	struct tree_node sorted_symbols[num_characters];
+	struct tree_node insertnode;
 	string jank = "";
 	int curr_head = 0;
-	// cout << "hit" << endl;
 	for(auto it = symbol_map.begin(); it != symbol_map.end(); it++){
 		jank += it->first;
-		//cout << jank << endl;
-		insertnode = {jank, it->second.frequency};
-		// cout << insertnode.symbols << endl;
+		insertnode = {jank, it->second.frequency, NULL, NULL};
 		sorted_symbols[curr_head] = insertnode;
 		curr_head++;
 		jank = "";
 	}
 
-	for(int i = 0; i < symbol_map.size(); i++){
-		cout << sorted_symbols[i].symbols << endl;
-	}
-	cout << "sorting" << endl;
-	msort(sorted_symbols, symbol_map.size()); //TODO: at this point, size should be its own variable
+	msort(sorted_symbols, num_characters); //TODO: at this point, size should be its own variable
+
+	struct tree_node created_node;
+	created_node.symbols = sorted_symbols[num_characters-2].symbols + sorted_symbols[num_characters-1] .symbols;
+	created_node.value = sorted_symbols[num_characters-2].value + sorted_symbols[num_characters-1] .value;
+	created_node.left_child = &sorted_symbols[num_characters-2];
+	created_node.right_child = &sorted_symbols[num_characters-1];
+
 	
-	for(int i = 0; i < symbol_map.size(); i++){
-		cout << sorted_symbols[i].symbols << endl;
-	}
+	// symbol_map[sorted_symbols[num_characters-2].symbols].encoding = "0" + symbol_map[sorted_symbols[num_characters-2].symbols].encoding;
+	// symbol_map[sorted_symbols[num_characters-1].symbols].encoding = "1" + symbol_map[sorted_symbols[num_characters-1].symbols].encoding;
+
+	
+	// for(int i = 0; i < num_characters; i++){
+	// 	cout << sorted_symbols[i].symbols << endl;
+	// }
+
+
 	return 0;
 }
 
 //merge sort
-void msort(node array[], int size){
+void msort(tree_node array[], int size){
 	msort(array, 0, size-1);
 }
 
 //merge sort helper
-void msort(node array[], int low, int high){
+void msort(tree_node array[], int low, int high){
 	if (low >= high) return;
 
 	int mid = (low + high)/2;
@@ -107,27 +118,27 @@ void msort(node array[], int low, int high){
 }
 
 //merge sorted arrays
-void merge(node array[], int low, int mid, int high){
+void merge(tree_node array[], int low, int mid, int high){
 	int size = high-low+1;
-	int temp[size];
+	tree_node temp[size];
 
 	int left = low; //start
 	int right = mid+1;
 
 	int index = 0;
 	while(left <= mid && right <= high){
-		if(array[left].value < array[right].value){
-			temp[index++] = array[left++].value;
+		if(array[left].value > array[right].value){
+			temp[index++] = array[left++];
 		}
-		else temp[index++] = array[right++].value;
+		else temp[index++] = array[right++];
 	}
 	while(left <= mid){
-		temp[index++] = array[left++].value;
+		temp[index++] = array[left++];
 	}
 	while(right <= high){
-		temp[index++] = array[right++].value;
+		temp[index++] = array[right++];
 	}
 	for(int i = 0; i < size; i ++){
-		array[low+i].value = temp[i];
+		array[low+i] = temp[i];
 	}
 }
