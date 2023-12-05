@@ -33,7 +33,8 @@ struct tree_node{
 void msort(vector<tree_node> &array, int size);
 void msort(vector<tree_node> &array, int low, int high);
 void merge(vector<tree_node> &array, int low, int mid, int high);
-
+void add_to_front(string &original, char new_char);
+void DFS(tree_node& tree, char character);
 
 int main(int argc, char *argv[]){
 	string filename = argv[1];
@@ -83,17 +84,19 @@ for(int i = 0; i < sorted_symbols.size(); i++){
 	}
 	cout << endl;
 
-	msort(sorted_symbols, num_characters); 
-	for(int i = 0; i < sorted_symbols.size(); i++){
-		cout << sorted_symbols[i].symbols <<  " " << sorted_symbols[i].value << endl;
-	}
-	cout << endl;
 	struct tree_node created_node;
 
 while(sorted_symbols.size() > 1){
+		msort(sorted_symbols, sorted_symbols.size()); 
+
+		cout << "new vector sorted" << endl;
+		for(int i = 0; i < sorted_symbols.size(); i++){
+			cout << sorted_symbols[i].symbols <<  " " << sorted_symbols[i].value << endl;
+		}
+
 		created_node.symbols = sorted_symbols[sorted_symbols.size()-2].symbols + sorted_symbols[sorted_symbols.size()-1] .symbols;
 		created_node.value = sorted_symbols[sorted_symbols.size()-2].value + sorted_symbols[sorted_symbols.size()-1] .value;
-		created_node.left_child = &sorted_symbols[sorted_symbols.size()-2]; //TODO: repalce with pop_back()?
+		created_node.left_child = &sorted_symbols[sorted_symbols.size()-2]; //TODO: replace with pop_back()?
 		created_node.right_child = &sorted_symbols[sorted_symbols.size()-1];
 
 		cout << "newly created node " << created_node.symbols << " " << created_node.value << endl;
@@ -108,13 +111,6 @@ while(sorted_symbols.size() > 1){
 			cout << sorted_symbols[i].symbols <<  " " << sorted_symbols[i].value << endl;
 		}
 
-		msort(sorted_symbols, sorted_symbols.size()); 
-		cout << endl;
-
-		cout << "new vector sorted" << endl;
-		for(int i = 0; i < sorted_symbols.size(); i++){
-			cout << sorted_symbols[i].symbols <<  " " << sorted_symbols[i].value << endl;
-		}
 		cout << endl;
 }
 
@@ -162,5 +158,29 @@ void merge(vector<tree_node> &array, int low, int mid, int high){
 	}
 	for(int i = 0; i < size; i ++){
 		array[low+i] = temp[i];
+	}
+}
+
+void add_to_front(string &original, char new_char){
+	original  = new_char + original;
+}
+
+void DFS(tree_node& tree, char character){
+	stack<tree_node> unvisitedFringe;
+	string encoding = "";
+
+	unvisitedFringe.push(tree);
+	while(true){
+		if(unvisitedFringe.size() == 0){
+			cout << "character not found" << endl;
+			exit(2); 
+		}
+		tree_node currentNode = unvisitedFringe.top();
+        unvisitedFringe.pop();
+		if (currentNode.symbols == character) return encoding; 
+		else{
+			for(int i = 0; i < actions.size(); i++)
+				unvisitedFringe.push(successor(currentNode.state_, actions[i]));
+		}
 	}
 }
