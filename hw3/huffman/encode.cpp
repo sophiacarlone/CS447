@@ -5,6 +5,7 @@
 #include<iostream>
 #include<fstream>
 #include<map>
+#include<vector>
 //#include"tree.cpp"
 
 using namespace std;
@@ -29,9 +30,9 @@ struct tree_node{
 };
 
 //functions
-void msort(tree_node array[], int size);
-void msort(tree_node array[], int low, int high);
-void merge(tree_node array[], int low, int mid, int high);
+void msort(vector<tree_node> &array, int size);
+void msort(vector<tree_node> &array, int low, int high);
+void merge(vector<tree_node> &array, int low, int mid, int high);
 
 
 int main(int argc, char *argv[]){
@@ -66,46 +67,67 @@ int main(int argc, char *argv[]){
 	// }
 
 	//sorting of frequencies
-	struct tree_node sorted_symbols[num_characters];
+	vector <struct tree_node> sorted_symbols;
 	struct tree_node insertnode;
 	string jank = "";
 	int curr_head = 0;
 	for(auto it = symbol_map.begin(); it != symbol_map.end(); it++){
 		jank += it->first;
 		insertnode = {jank, it->second.frequency, NULL, NULL};
-		sorted_symbols[curr_head] = insertnode;
+		sorted_symbols.push_back(insertnode);
 		curr_head++;
 		jank = "";
 	}
+for(int i = 0; i < sorted_symbols.size(); i++){
+		cout << sorted_symbols[i].symbols <<  " " << sorted_symbols[i].value << endl;
+	}
+	cout << endl;
 
-	msort(sorted_symbols, num_characters); //TODO: at this point, size should be its own variable
-
+	msort(sorted_symbols, num_characters); 
+	for(int i = 0; i < sorted_symbols.size(); i++){
+		cout << sorted_symbols[i].symbols <<  " " << sorted_symbols[i].value << endl;
+	}
+	cout << endl;
 	struct tree_node created_node;
-	created_node.symbols = sorted_symbols[num_characters-2].symbols + sorted_symbols[num_characters-1] .symbols;
-	created_node.value = sorted_symbols[num_characters-2].value + sorted_symbols[num_characters-1] .value;
-	created_node.left_child = &sorted_symbols[num_characters-2];
-	created_node.right_child = &sorted_symbols[num_characters-1];
 
-	
-	// symbol_map[sorted_symbols[num_characters-2].symbols].encoding = "0" + symbol_map[sorted_symbols[num_characters-2].symbols].encoding;
-	// symbol_map[sorted_symbols[num_characters-1].symbols].encoding = "1" + symbol_map[sorted_symbols[num_characters-1].symbols].encoding;
+while(sorted_symbols.size() > 1){
+		created_node.symbols = sorted_symbols[sorted_symbols.size()-2].symbols + sorted_symbols[sorted_symbols.size()-1] .symbols;
+		created_node.value = sorted_symbols[sorted_symbols.size()-2].value + sorted_symbols[sorted_symbols.size()-1] .value;
+		created_node.left_child = &sorted_symbols[sorted_symbols.size()-2]; //TODO: repalce with pop_back()?
+		created_node.right_child = &sorted_symbols[sorted_symbols.size()-1];
 
-	
-	// for(int i = 0; i < num_characters; i++){
-	// 	cout << sorted_symbols[i].symbols << endl;
-	// }
+		cout << "newly created node " << created_node.symbols << " " << created_node.value << endl;
 
+		sorted_symbols.pop_back();
+		sorted_symbols.pop_back();
+
+		sorted_symbols.push_back(created_node);
+
+	cout << "new vector" << endl;
+		for(int i = 0; i < sorted_symbols.size(); i++){
+			cout << sorted_symbols[i].symbols <<  " " << sorted_symbols[i].value << endl;
+		}
+
+		msort(sorted_symbols, sorted_symbols.size()); 
+		cout << endl;
+
+		cout << "new vector sorted" << endl;
+		for(int i = 0; i < sorted_symbols.size(); i++){
+			cout << sorted_symbols[i].symbols <<  " " << sorted_symbols[i].value << endl;
+		}
+		cout << endl;
+}
 
 	return 0;
 }
 
 //merge sort
-void msort(tree_node array[], int size){
+void msort(vector<tree_node> &array, int size){
 	msort(array, 0, size-1);
 }
 
 //merge sort helper
-void msort(tree_node array[], int low, int high){
+void msort(vector<tree_node> &array, int low, int high){
 	if (low >= high) return;
 
 	int mid = (low + high)/2;
@@ -118,7 +140,7 @@ void msort(tree_node array[], int low, int high){
 }
 
 //merge sorted arrays
-void merge(tree_node array[], int low, int mid, int high){
+void merge(vector<tree_node> &array, int low, int mid, int high){
 	int size = high-low+1;
 	tree_node temp[size];
 
