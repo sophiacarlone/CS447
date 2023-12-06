@@ -79,16 +79,18 @@ int main(int argc, char *argv[]){
 		curr_head++;
 		jank = "";
 	}
+
 /*
 for(int i = 0; i < sorted_symbols.size(); i++){
 		cout << sorted_symbols[i].symbols <<  " " << sorted_symbols[i].value << endl;
 	}
-	cout << endl; */
-
+	cout << endl; 
+*/
 	struct tree_node created_node;
 //	int num_of_new_nodes_created = 0;
 
 while(sorted_symbols.size() > 1){ //when the vector is equal to 1, that means we have made the main tree
+//	cout << "in while" << endl;
 		msort(sorted_symbols, sorted_symbols.size()); //sort the nodes 
 /*
 		cout << "new vector sorted" << endl;
@@ -105,13 +107,15 @@ while(sorted_symbols.size() > 1){ //when the vector is equal to 1, that means we
 		cout << "created node left child " << created_node.left_child->symbols << endl;
 		cout << "created node rightt child " << created_node.right_child->symbols << endl;
 //		num_of_new_nodes_created++;
-//		cout << "newly created node " << created_node.symbols << " " << created_node.value << endl;
+		cout << "newly created node " << created_node.symbols << " " << created_node.value << endl;
 
 		//remove the last two nodes and replace with their new parent node
 		sorted_symbols.pop_back();
 		sorted_symbols.pop_back();
 
 		sorted_symbols.push_back(created_node);
+		cout << "created node left child " << created_node.left_child->symbols << endl;
+		cout << "created node rightt child " << created_node.right_child->symbols << endl;
 /*
 	cout << "new vector" << endl;
 		for(int i = 0; i < sorted_symbols.size(); i++){
@@ -122,8 +126,8 @@ while(sorted_symbols.size() > 1){ //when the vector is equal to 1, that means we
 */
 }
 
-	//cout << "hi" << endl;
-	cout << sorted_symbols[0].left_child->symbols << endl;
+	cout << "hi" << endl;
+	cout << "claimed left child: " << sorted_symbols[0].left_child->symbols << endl;
 	cout << "hi" << endl;
 	cout << sorted_symbols[0].right_child->symbols << endl;
 	cout << "hi" << endl;
