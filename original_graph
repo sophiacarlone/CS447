@@ -1,0 +1,11 @@
+// Flow Network
+digraph {
+	source
+	source -> A [label=10]
+	source -> B [label=5]
+	A
+	A -> B [label=15]
+	A -> terminal [label=10]
+	B
+	B -> terminal [label=10]
+}
