@@ -31,19 +31,19 @@ class Graph:
         return False
 
     # Calculating value of flow
-    def calc_flow(self, source, sink):
+    def calc_flow(self, source, terminal):
         max_flow = 0
 
-        while self.bfs(source, sink):
+        while self.bfs(source, terminal):
             path_flow = sys.maxsize
-            start = sink
+            start = terminal
             while start != source:
                 path_flow = min(path_flow, self.graph[self.parent[start]][start])
                 start = self.parent[start]
 
             max_flow += path_flow
 
-            curr_node = sink
+            curr_node = terminal
             while curr_node != source:
                 top = self.parent[curr_node]
                 self.graph[top][curr_node] -= path_flow
@@ -86,10 +86,10 @@ class Graph:
                 capacity = int(halves[1].split('[')[1].split(']')[0].strip())
                 self.add_edge(start, end, capacity)
 
-                # if self.source is None or start == self.sink:
+                # if self.source is None or start == self.terminal:
                 #     self.source = start
-                # if self.sink is None or end == self.source:
-                #     self.sink = end
+                # if self.terminal is None or end == self.source:
+                #     self.terminal = end
 
 
 
@@ -97,12 +97,12 @@ if __name__ == "__main__":
 
     num_vertices = 4
     source = 0
-    sink = 3
+    terminal = 3
     graph1 = Graph(num_vertices)
 
     graph1.read_graph("C://Users//euph1//OneDrive//Documents//GitHub//CS447//hw4//k4-minus-edge.txt")
 
-    flow = graph1.calc_flow(source, sink)
+    flow = graph1.calc_flow(source, terminal)
     print(f"Maximum Flow: {flow}")
     
     witness_cut = graph1.can_reach
