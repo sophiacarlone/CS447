@@ -76,7 +76,7 @@ class Graph:
     # Taking in graph from text file
     def read_graph(self, filename):
         with open(filename, 'r') as file:
-            lines = file.readlines
+            lines = file.readlines()
 
         for line in lines:
             if '->' in lines:
@@ -86,21 +86,63 @@ class Graph:
                 capacity = int(halves[1].split('[')[1].split(']')[0].strip())
                 self.add_edge(start, end, capacity)
 
-                # if self.source is None or start == self.terminal:
-                #     self.source = start
-                # if self.terminal is None or end == self.source:
-                #     self.terminal = end
+    
+def calc_source_and_terminal(filename):
+    source = 0
+    terminal = 0
+    with open(filename, 'r') as file:
+        lines = file.readlines()
+
+    for line in lines:
+        if '->' in lines:
+            halves = line.strip().split('->')
+            start = int(halves[0].strip())
+            end = int(halves[1].split('[')[0].strip())
+            if (start <= source):
+                source = start
+            if (end > terminal):
+                terminal = end
+
+    return source, terminal
+
+def calc_num_vertices(filename):
+    vertices_set = set()
+
+    with open(filename, 'r') as file:
+        lines = file.readlines()
+
+    for line in lines:
+        if '->' in line:
+            halves = line.strip().split('->')
+            vertices_set.add(int(halves[0].strip()))
+            vertices_set.add(int(halves[1].split('[')[0].strip()))
+
+    return max(vertices_set) + 1
+
+# def calc_num_vertices(filename):
+#     count = 0
+#     with open(filename, 'r') as file:
+#         lines = file.readlines()
+
+#     for line in lines:
+#         if '->' in lines:
+#             count += 1
+    
+#     return count
 
 
 
 if __name__ == "__main__":
 
-    num_vertices = 4
-    source = 0
-    terminal = 3
+    filename = input("Enter the name of the file you would like to open: ")
+
+    num_vertices = calc_num_vertices(filename)
+
+    source, terminal = calc_source_and_terminal(filename)
+
     graph1 = Graph(num_vertices)
 
-    graph1.read_graph("C://Users//euph1//OneDrive//Documents//GitHub//CS447//hw4//k4-minus-edge.txt")
+    graph1.read_graph(filename)
 
     flow = graph1.calc_flow(source, terminal)
     print(f"Maximum Flow: {flow}")
