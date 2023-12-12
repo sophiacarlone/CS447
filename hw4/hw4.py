@@ -144,20 +144,7 @@ def calc_num_vertices(filename):
 
 if __name__ == "__main__":
 
-    # Hardcoding based on k4-minus-edge.txt (works)
-    # num_vertices = 4
-    
-    # graph1 = Graph(num_vertices)
-
-    # graph1.add_edge(0, 1, 20)
-    # graph1.add_edge(0, 2, 10)
-    # graph1.add_edge(1, 2, 10)
-    # graph1.add_edge(1, 3, 10)
-    # graph1.add_edge(2, 3, 20)
-
-    # flow = graph1.calc_flow(0, 3)
-
-    # Taking input from text file in graphviz format (doesn't work)
+    # Taking input from text file in graphviz format
     filename = input("Enter the name of the file you would like to open: ")
     
     num_vertices = calc_num_vertices(filename)
@@ -168,9 +155,6 @@ if __name__ == "__main__":
 
     graph1.read_graph(filename)
 
-    #flow = graph1.calc_flow(source, terminal)
-    # graph1 = graphviz.Source.from_file('k4-minus-edge.dot')
-    # graph1 = pydot.graph_from_dot_file('k4-minus-edge.dot')
     flow = graph1.calc_flow(0, 3)
     print(f"Maximum Flow: {flow}")
     
