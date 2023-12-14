@@ -23,7 +23,8 @@ int main(int argc, char *argv[]){
 
 	map<string, pair<int, int>> index_string_table;
 	int index = 0;
-	index_string_table[""] = {index, 0}; //first line of table {index, length}
+	int maxlen = 0;
+	index_string_table[""] = {index, maxlen}; //first line of table {index, length}
 	index++;
 
 	string prefix = "";
@@ -31,16 +32,30 @@ int main(int argc, char *argv[]){
 	string curr_string = "";
 	int len;
 	while(in >> curr){
+		cout  << "top" << endl;
+		cout << curr << endl;
 		curr_string += curr;
 		auto it = index_string_table.find(curr_string);
 		if(it == index_string_table.end()){
+			cout << "hit b" << endl;
 			len = length(index); //length
 			index_string_table[curr_string] = {index, len};
-			out << indexRep(index, len) << curr;
+			cout << "entering table: " << index << " " << curr_string << " " << len << endl;
+			out << indexRep(index_string_table.find(prefix)->second.first, maxlen) << curr;
+			if(len > maxlen) maxlen = len;
 			cout << curr_string << endl;
 			index++;
 			curr_string = "";
 		}
+		else{
+			cout << "hit c" << endl;
+			prefix = curr_string;
+		}
+	}
+	if(prefix != ""){
+		cout << "hit" << endl;
+		cout << indexRep(index_string_table.find(prefix)->second.first, maxlen) << endl;
+		out << 	indexRep(index_string_table.find(prefix)->second.first, maxlen);
 	}
 	in.close();
 	out.close();
