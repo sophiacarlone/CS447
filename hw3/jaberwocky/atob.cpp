@@ -2,7 +2,7 @@
 
 #include<iostream>
 #include<fstream>
-#include <bitset>
+#include<bitset>
 
 using namespace std;
 

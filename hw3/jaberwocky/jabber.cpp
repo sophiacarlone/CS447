@@ -67,8 +67,10 @@ int length(int index){
 }
 
 string indexRep(int index, int len){
-	bitset<8> b(index);
+	bitset<64> b(index);
 	string result = b.to_string();
+	cout  << "aaah" << endl;
+	cout << result << " " << len << endl;
 	return result.substr(result.size() - len);
 }
 
