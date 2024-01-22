@@ -1,6 +1,7 @@
 import sys
 import queue
 import graphviz
+import pydot
 
 class Graph:
     def __init__(self, vertices):
@@ -77,13 +78,17 @@ class Graph:
     def read_graph(self, filename):
         with open(filename, 'r') as file:
             lines = file.readlines()
+            print("File opened")
 
         for line in lines:
-            if '->' in lines:
+            # print(line)
+            if "->" in line:
+                # print("Valid line - R G")
                 halves = line.strip().split('->')
                 start = int(halves[0].strip())
                 end = int(halves[1].split('[')[0].strip())
-                capacity = int(halves[1].split('[')[1].split(']')[0].strip())
+                capacity = int(halves[1].split('[')[1].split(']')[0].split("\"")[1].strip())
+                # print(start, end, capacity)
                 self.add_edge(start, end, capacity)
 
     
@@ -94,7 +99,9 @@ def calc_source_and_terminal(filename):
         lines = file.readlines()
 
     for line in lines:
-        if '->' in lines:
+        # print(line)
+        if '->' in line:
+            # print("Valid line - C S&T")
             halves = line.strip().split('->')
             start = int(halves[0].strip())
             end = int(halves[1].split('[')[0].strip())
@@ -112,11 +119,14 @@ def calc_num_vertices(filename):
         lines = file.readlines()
 
     for line in lines:
+        # print(line)
         if '->' in line:
+            # print("Valid line - C N V")
             halves = line.strip().split('->')
             vertices_set.add(int(halves[0].strip()))
             vertices_set.add(int(halves[1].split('[')[0].strip()))
 
+    print(max(vertices_set) + 1)
     return max(vertices_set) + 1
 
 # def calc_num_vertices(filename):
@@ -134,8 +144,9 @@ def calc_num_vertices(filename):
 
 if __name__ == "__main__":
 
+    # Taking input from text file in graphviz format
     filename = input("Enter the name of the file you would like to open: ")
-
+    
     num_vertices = calc_num_vertices(filename)
 
     source, terminal = calc_source_and_terminal(filename)
@@ -144,7 +155,7 @@ if __name__ == "__main__":
 
     graph1.read_graph(filename)
 
-    flow = graph1.calc_flow(source, terminal)
+    flow = graph1.calc_flow(0, 3)
     print(f"Maximum Flow: {flow}")
     
     witness_cut = graph1.can_reach
