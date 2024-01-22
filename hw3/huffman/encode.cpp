@@ -124,6 +124,8 @@ while(sorted_symbols.size() > 1){ //when the vector is equal to 1, that means we
 
 		cout << endl;
 */
+		cout << endl;
+
 }
 
 	cout << "hi" << endl;
